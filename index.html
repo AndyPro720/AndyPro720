@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angaj</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #121212;
+            --primary-text: #e0e0e0;
+            --secondary-text: #a0a0a0;
+            --accent-color: #00e5ff;
+            --card-bg: #1e1e1e;
+            --card-border: #333333;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-size: 16px;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+        }
+
+        .name {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin: 0;
+            color: #ffffff;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--secondary-text);
+            margin-top: 0.5rem;
+        }
+
+        .typing-effect {
+            color: var(--accent-color);
+            font-weight: 700;
+            border-right: 2px solid var(--accent-color);
+            animation: blink 0.75s step-end infinite;
+        }
+
+        #about p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+        }
+
+        #projects h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            text-align: left;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 229, 255, 0.1);
+        }
+
+        .card h4 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--secondary-text);
+            margin-bottom: 0;
+        }
+
+        footer {
+            margin-top: 4rem;
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+        }
+
+        .social-links a {
+            color: var(--secondary-text);
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-color);
+        }
+
+        @keyframes blink {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: var(--accent-color);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1 class="name">Angaj</h1>
+            <h2 class="subtitle">I'm a <span class="typing-effect"></span></h2>
+        </header>
+
+        <main>
+            <section id="about">
+                <p>A software developer and systems enthusiast passionate about building robust and efficient
+                    applications. From crafting compilers to orchestrating self-hosted services, I enjoy exploring the
+                    depths of technology.</p>
+            </section>
+
+            <section id="projects">
+                <h3>Core Interests</h3>
+                <div class="card-container">
+                    <div class="card">
+                        <h4>Compiler Design</h4>
+                        <p>Exploring language theory and implementation. Previously built a Jack Compiler based on the
+                            Nand2Tetris curriculum.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Systems & Self-Hosting</h4>
+                        <p>Managing Linux servers, Docker containers, and networking with tools like Nginx and Tailscale
+                            for a secure homelab.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Home Automation</h4>
+                        <p>Automating my living space using Home Assistant, MQTT, and custom integrations for a smarter
+                            home.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="social-links">
+                <a href="https://github.com/your-username" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://linkedin.com/in/your-profile" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="mailto:your-email@example.com">Email</a>
+            </div>
+            <p>&copy; 2025 Angaj. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const roles = ["Software Developer.", "Sysadmin.", "Tinkerer.", "Runner."];
+            let roleIndex = 0;
+            let charIndex = 0;
+            const typingElement = document.querySelector('.typing-effect');
+
+            function type() {
+                if (charIndex < roles[roleIndex].length) {
+                    typingElement.textContent += roles[roleIndex].charAt(charIndex);
+                    charIndex++;
+                    setTimeout(type, 100);
+                } else {
+                    setTimeout(erase, 2000);
+                }
+            }
+
+            function erase() {
+                if (charIndex > 0) {
+                    typingElement.textContent = roles[roleIndex].substring(0, charIndex - 1);
+                    charIndex--;
+                    setTimeout(erase, 50);
+                } else {
+                    roleIndex = (roleIndex + 1) % roles.length;
+                    setTimeout(type, 500);
+                }
+            }
+
+            type();
+        });
+    </script>
+</body>
+
+</html>
