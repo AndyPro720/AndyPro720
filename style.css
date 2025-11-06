@@ -710,10 +710,10 @@ img {
     /* --- END NEW --- */
 
     .animated-headline { 
-        height: 90; /* --- MODIFIED: Allow height to be auto for stacking --- */ 
+        height: auto; /* --- MODIFIED: Allow height to be auto for stacking --- */ 
     }
     .animated-headline b { 
-        height: 90px; 
+        height: 70px; 
         line-height: 60px; 
     }
 
