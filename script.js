@@ -9,9 +9,18 @@ $(document).ready(function() {
     let currentSectionIndex = 0;
     // --- END FIX ---
 
-    // --- Preloader ---
+    // --- Preloader (UPDATED with Fail-safe) ---
+    let preloaderFaded = false;
+    function hidePreloader() {
+        if (!preloaderFaded) {
+            preloaderFaded = true;
+            $('#preloader').fadeOut(500);
+        }
+    }
+
+    // 1. Hide on load (ideal case)
     $(window).on('load', function() {
-        $('#preloader').fadeOut(500);
+        hidePreloader();
 
         // --- FIX: Moved Animated Headline Logic to window.load ---
         // This ensures fonts are loaded and height calculation is correct
@@ -52,6 +61,10 @@ $(document).ready(function() {
         })();
         // --- END FIX ---
     });
+
+    // 2. Fail-safe: Hide after 3 seconds anyway
+    setTimeout(hidePreloader, 3000);
+    // --- END PRELOADER UPDATE ---
 
     // --- Menu Toggle ---
     const $menuBtn = $('.menu-btn');
@@ -94,6 +107,14 @@ $(document).ready(function() {
         // Update current section index
         currentSectionIndex = sections.indexOf(targetId);
 
+        // --- NEW: Hide/Show Scroll Indicator ---
+        if (currentSectionIndex === 0) {
+            $('.scroll-indicator').fadeIn(300);
+        } else {
+            $('.scroll-indicator').fadeOut(300);
+        }
+        // --- END NEW ---
+
         // Close menu
         // $menuBtn.removeClass('open'); // --- OPTIMIZATION: Removed unused class ---
         $navOverlay.removeClass('open');
@@ -111,6 +132,14 @@ $(document).ready(function() {
         $('#home').addClass('active');
         currentSectionIndex = 0; // Set index
     }
+
+    // --- NEW: Set initial scroll indicator state ---
+    if (currentSectionIndex === 0) {
+        $('.scroll-indicator').show();
+    } else {
+        $('.scroll-indicator').hide();
+    }
+    // --- END NEW ---
 
     // --- Mouse Wheel "Scroll" Navigation ---
     $(window).on('wheel', function(e) {
@@ -136,6 +165,14 @@ $(document).ready(function() {
         $(targetId).addClass('active');
         window.location.hash = targetId;
         
+        // --- NEW: Hide/Show Scroll Indicator ---
+        if (currentSectionIndex === 0) {
+            $('.scroll-indicator').fadeIn(300);
+        } else {
+            $('.scroll-indicator').fadeOut(300);
+        }
+        // --- END NEW ---
+
         setTimeout(() => {
             isThrottled = false;
         }, 550); // --- FIX: Faster scroll throttle (550ms) ---
@@ -177,6 +214,14 @@ $(document).ready(function() {
             $(targetId).addClass('active');
             window.location.hash = targetId;
             
+            // --- NEW: Hide/Show Scroll Indicator ---
+            if (currentSectionIndex === 0) {
+                $('.scroll-indicator').fadeIn(300);
+            } else {
+                $('.scroll-indicator').fadeOut(300);
+            }
+            // --- END NEW ---
+
             // Reset throttle
             setTimeout(() => {
                 isThrottled = false;
