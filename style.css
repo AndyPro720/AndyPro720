@@ -6,8 +6,8 @@
     /* === EDIT HERE: Customize Colors === */
     --primary-color: #6a5acd; /* Indigo */
     --primary-color-dark: #483d8b; /* Darker Indigo */
-    --bg-color: #111111;
-    --surface-color: #1a1a1a;
+    --bg-color: #000000;
+    --surface-color: #111111;
     --text-color: #ffffff;
     --text-color-secondary: #aaaaaa;
     /* === END EDIT === */
@@ -382,7 +382,7 @@ img {
 .home-content h1 .static-headline {
     display: inline-block; /* Required for reflection */
     /* --- FIX: Updated reflection color --- */
-    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 70%, rgba(106, 90, 205, 0.15));
+    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 10%, rgba(105, 90, 205, 0.403));
 }
 /* --- END FIX --- */
 .home-content h1 span {
@@ -408,6 +408,8 @@ img {
     position: relative; /* CHANGED */
     transform: translateY(0);
     transition: transform 0.5s ease-in-out; /* ADDED */
+    height: 40px;
+    overflow: hidden;
 }
 .animated-headline b {
     display: block; /* CHANGED */
@@ -421,7 +423,7 @@ img {
     color: var(--primary-color);
     transition: none; /* RESET */
     /* --- FIX: Updated reflection color --- */
-    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 70%, rgba(106, 90, 205, 0.15));
+    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 10%, rgba(106, 90, 205, 0.15));
     /* --- END FIX --- */
 }
 /* REMOVED .is-visible and .is-hidden logic, not needed */
@@ -506,7 +508,7 @@ img {
     border-radius: 10px;
     overflow: hidden;
     /* --- FIX: Updated reflection color --- */
-    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 70%, rgba(106, 90, 205, 0.15)); 
+    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 10%, rgba(105, 90, 205, 0.315)); 
     /* --- END FIX --- */
     max-width: 90vw; /* --- NEW: Prevent mobile overflow --- */
     transition: transform 0.2s ease; /* --- NEW: Active state transition --- */
@@ -584,7 +586,7 @@ img {
     object-fit: cover;
     border-radius: 24px;
     /* --- FIX: Updated reflection color --- */
-    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 50%, rgba(106, 90, 205, 0.15));
+    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 30%, rgba(105, 90, 205, 0.325));
     /* --- END FIX --- */
 }
 
@@ -703,7 +705,7 @@ img {
     .animated-headline .static-prefix {
         display: block;
         /* Re-apply reflection as display:block breaks the parent's */
-        -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 70%, rgba(106, 90, 205, 0.15));
+        -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 30%, rgba(106, 90, 205, 0.15));
     }
     .animated-headline .words-wrapper {
         display: block; /* Also make this block */
@@ -715,8 +717,8 @@ img {
         height: auto; /* --- MODIFIED: Allow height to be auto for stacking --- */ 
     }
     .animated-headline b { 
-        height: 40px; 
-        line-height: 40px; 
+        height: 60px; 
+        line-height: 60px; 
     }
 
     .section-title { font-size: 6vw; }

@@ -175,7 +175,7 @@ $(document).ready(function() {
 
         setTimeout(() => {
             isThrottled = false;
-        }, 550); // --- FIX: Faster scroll throttle (550ms) ---
+        }, 750); // --- FIX: Faster scroll throttle (550ms) ---
     });
 
     // --- FIX: Touch Swipe Navigation for Mobile ---
@@ -236,7 +236,6 @@ $(document).ready(function() {
     // --- END FIX ---
 
 
-    // --- FIX: Re-added Interactive Background (Mouse Follow) JS ---
     // Only run this for non-touch devices
     let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (!isTouchDevice) {
@@ -254,8 +253,7 @@ $(document).ready(function() {
                 
                 // --- FIX: Brighter, colored gradient "spotlight" ---
                 /* --- MODIFIED: Shrunk radius for a smaller hover area --- */
-                $bg.css('background', `radial-gradient(circle at ${x}% ${y}%, rgba(106, 90, 205, 0.35) 0%, rgba(106, 90, 205, 0.1) 10%, transparent 20%)`);
-                // --- END FIX ---
+                $bg.css('background', `radial-gradient(circle at ${x}% ${y}%,rgba(61, 25, 140, 0.18) 0%, rgba(67, 53, 160, 0.21) 3%, transparent 10%)`);
             });
         });
     } else {
