@@ -1,23 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- === EDIT HERE === --><title>Your Name - Digital Creator</title>
-    <!-- === END EDIT === --><!-- LIBRARIES --><!-- jQuery (Required) --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    
-    <!-- Swiper.js (For 3D Carousel) --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.css" />
+
+    <!-- === EDIT HERE === -->
+    <title>Your Name - Digital Creator</title>
+    <!-- === END EDIT === -->
+
+    <!-- LIBRARIES -->
+    <!-- jQuery (Required) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Swiper.js (For 3D Carousel) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.js"></script>
 
-    <!-- STYLES --><style>
+    <!-- === OPTIMIZATION: Moved font import to <head> for performance === -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- STYLES -->
+    <style>
         /* --- GLOBAL STYLES --- */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        /* === OPTIMIZATION: @import moved to <head> <link> === */
+        /* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap'); */
 
         :root {
             /* === EDIT HERE: Customize Colors === */
-            --primary-color: #6a5acd; /* Indigo */
-            --primary-color-dark: #483d8b; /* Darker Indigo */
+            --primary-color: #6a5acd;
+            /* Indigo */
+            --primary-color-dark: #483d8b;
+            /* Darker Indigo */
             --bg-color: #111111;
             --surface-color: #1a1a1a;
             --text-color: #ffffff;
@@ -31,13 +48,15 @@
             box-sizing: border-box;
         }
 
-        html, body {
+        html,
+        body {
             width: 100%;
             height: 100%;
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            overflow: hidden; /* This is key to the single-page feel */
+            overflow: hidden;
+            /* This is key to the single-page feel */
             position: relative;
         }
 
@@ -46,6 +65,7 @@
             color: var(--primary-color);
             transition: color 0.3s ease;
         }
+
         a:hover {
             color: var(--primary-color-dark);
         }
@@ -69,6 +89,7 @@
             align-items: center;
             transition: opacity 0.5s ease;
         }
+
         .loader {
             width: 50px;
             height: 50px;
@@ -77,8 +98,11 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* --- NEW: Interactive Background --- */
@@ -88,8 +112,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0; /* Behind everything */
-            /* CHANGED: Brighter, more visible gradient */
+            z-index: 0;
+            /* Behind everything */
             background: radial-gradient(circle at 50% 50%, #3a3a3a 0%, #111111 40%, #111111 100%);
         }
 
@@ -105,17 +129,20 @@
             align-items: center;
             z-index: 100;
         }
+
         .header .logo {
             font-size: 24px;
             font-weight: 700;
             color: var(--text-color);
         }
+
         .menu-btn {
             font-size: 16px;
             font-weight: 600;
             color: var(--text-color);
             cursor: pointer;
-            z-index: 101; /* Above header, below menu */
+            z-index: 101;
+            /* Above header, below menu */
             position: relative;
         }
 
@@ -123,7 +150,8 @@
         .nav-overlay {
             position: fixed;
             top: 0;
-            right: -100%; /* Start off-screen */
+            right: -100%;
+            /* Start off-screen */
             width: 100%;
             height: 100%;
             background-color: rgba(17, 17, 17, 0.95);
@@ -134,16 +162,20 @@
             align-items: center;
             transition: right 0.7s cubic-bezier(0.7, 0, 0.3, 1);
         }
+
         .nav-overlay.open {
             right: 0;
         }
+
         .nav-overlay ul {
             list-style: none;
             text-align: center;
         }
+
         .nav-overlay ul li {
             margin: 20px 0;
         }
+
         .nav-overlay ul li a {
             font-size: 4vw;
             font-weight: 600;
@@ -152,9 +184,32 @@
             letter-spacing: 2px;
             transition: color 0.3s ease;
         }
+
         .nav-overlay ul li a:hover {
             color: var(--primary-color);
         }
+
+        /* --- FIX: Added Close Button for Menu --- */
+        .close-btn {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 48px;
+            /* Bigger, easier to click */
+            color: var(--text-color);
+            cursor: pointer;
+            transition: transform 0.3s ease, color 0.3s ease;
+            z-index: 102;
+            /* Above nav links */
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: var(--primary-color);
+            transform: rotate(90deg);
+        }
+
+        /* --- END FIX --- */
 
         /* --- SOCIAL LINKS --- */
         .social-links {
@@ -163,11 +218,13 @@
             left: 40px;
             z-index: 10;
         }
+
         .social-links a {
             margin-right: 20px;
             font-size: 14px;
             color: var(--text-color-secondary);
         }
+
         .social-links a:hover {
             color: var(--primary-color);
         }
@@ -182,7 +239,7 @@
             color: var(--text-color-secondary);
             transform: rotate(90deg);
         }
-        
+
         /* --- MAIN SECTIONS WRAPPER --- */
         .main-content {
             width: 100%;
@@ -201,20 +258,27 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            
+
             /* Transition */
             opacity: 0;
             visibility: hidden;
-            transform: translateY(50px); /* Start 50px down */
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out, visibility 0.8s; /* Slower, smoother fade/slide */
-            z-index: 2; /* Above interactive-bg */
+            transform: translateY(50px);
+            /* Start 50px down */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out, visibility 0.8s;
+            /* Slower, smoother fade/slide */
+            z-index: 2;
+            /* Above interactive-bg */
         }
+
         .section.active {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0); /* Slide to 0 */
-            z-index: 3; /* Above other sections */
+            transform: translateY(0);
+            /* Slide to 0 */
+            z-index: 3;
+            /* Above other sections */
         }
+
         .section-container {
             max-width: 1200px;
             width: 100%;
@@ -222,52 +286,74 @@
             position: relative;
             z-index: 3;
         }
-        
+
         /* --- HOME SECTION --- */
         #home {
-            justify-content: flex-start; /* Fixes centering issue */
+            justify-content: flex-start;
+            /* Fixes centering issue */
             text-align: left;
         }
+
         .home-content {
             position: relative;
             z-index: 2;
             padding-left: 10%;
         }
+
         .home-content h1 {
             font-size: 5vw;
             font-weight: 700;
             margin-bottom: 20px;
             line-height: 1.2;
         }
+
         .home-content h1 span {
             color: var(--primary-color);
         }
-        
-        /* Animated Headline */
+
+        /* --- FIX: Animated Headline (Re-engineered) --- */
         .animated-headline {
             display: block;
             position: relative;
-            height: 60px; /* Adjust height based on font size */
+            height: 60px;
+            /* Adjust height based on font size */
+            overflow: hidden;
+            /* ADDED */
         }
+
         .animated-headline .words-wrapper {
             display: inline-block;
-            position: absolute;
-            overflow: hidden;
+            position: relative;
+            /* CHANGED */
+            transform: translateY(0);
+            transition: transform 0.5s ease-in-out;
+            /* ADDED */
         }
+
         .animated-headline b {
-            display: inline-block;
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            width: 0;
-            color: var(--primary-color);
-            transition: width 0.4s ease-in-out, opacity 0.4s;
-        }
-        .animated-headline b.is-visible {
+            display: block;
+            /* CHANGED */
+            position: relative;
+            /* CHANGED */
+            left: auto;
+            /* RESET */
+            top: auto;
+            /* RESET */
             opacity: 1;
-            width: 100%;
+            /* CHANGED */
+            width: auto;
+            /* CHANGED */
+            height: 60px;
+            /* Match parent */
+            line-height: 60px;
+            /* Center text */
+            color: var(--primary-color);
+            transition: none;
+            /* RESET */
         }
+
+        /* REMOVED .is-visible and .is-hidden logic, not needed */
+        /* --- END FIX --- */
 
         /* --- OTHER SECTIONS (ABOUT, SERVICES, ETC.) --- */
         .section-title {
@@ -276,6 +362,7 @@
             margin-bottom: 15px;
             text-transform: uppercase;
         }
+
         .section-subtitle {
             font-size: 1.2rem;
             color: var(--text-color-secondary);
@@ -284,7 +371,7 @@
             margin-left: auto;
             margin-right: auto;
         }
-        
+
         /* About Section */
         #about .about-content {
             display: grid;
@@ -293,23 +380,27 @@
             text-align: left;
             align-items: center;
         }
+
         #about .about-image img {
             border-radius: 10px;
             width: 100%;
             height: 400px;
             object-fit: cover;
         }
+
         #about .about-text h3 {
             font-size: 2rem;
             font-weight: 600;
             margin-bottom: 20px;
         }
+
         #about .about-text p {
             font-size: 1rem;
             color: var(--text-color-secondary);
             line-height: 1.7;
             margin-bottom: 20px;
         }
+
         .btn {
             display: inline-block;
             padding: 12px 30px;
@@ -320,6 +411,7 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
+
         .btn:hover {
             background-color: transparent;
             color: var(--primary-color);
@@ -330,102 +422,110 @@
             width: 100%;
             padding-top: 50px;
             padding-bottom: 50px;
-            /* Added for better 3D effect */
-            perspective: 1200px; 
+            perspective: 1200px;
             overflow: visible;
         }
+
         .swiper-slide {
             background-position: center;
             background-size: cover;
-            /* --- CHANGED --- */
-            width: 400px; /* Width of the slides */
-            height: 280px; /* Height of the slides */
-            /* --- END CHANGED --- */
+            width: 400px;
+            height: 280px;
             border-radius: 10px;
             overflow: hidden;
-            /* --- CHANGED --- */
-            -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 80%, rgba(255, 255, 255, 0.2)); 
-            /* --- END CHANGED --- */
+            -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 80%, rgba(255, 255, 255, 0.2));
         }
+
         .swiper-slide img {
             display: block;
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        /* Style for navigation arrows */
+
         .swiper-button-next::after,
         .swiper-button-prev::after {
             font-size: 24px !important;
             color: var(--primary-color);
         }
-        /* Style for pagination bullets */
+
         .swiper-pagination-bullet {
             background: var(--text-color-secondary);
         }
+
         .swiper-pagination-bullet-active {
             background: var(--primary-color);
         }
+
         /* --- End Swiper.js Styles --- */
 
 
         /* Services Section */
         .services-grid {
-            display: flex; /* CHANGED */
-            justify-content: center; /* ADDED */
-            align-items: center; /* ADDED */
-            gap: 40px; /* CHANGED */
-            flex-wrap: wrap; /* ADDED */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
         }
+
         .service-item {
-            background-color: transparent; /* CHANGED */
-            padding: 0; /* CHANGED */
-            border-radius: 0; /* CHANGED */
-            text-align: center; /* CHANGED */
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+            text-align: center;
             transition: transform 0.3s ease;
         }
+
         .service-item:hover {
             transform: translateY(-10px);
         }
+
         .service-item .icon {
-            display: none; /* HIDE old icon */
+            display: none;
         }
+
         .service-item h4 {
-            display: none; /* HIDE old text */
+            display: none;
         }
+
         .service-item p {
-            display: none; /* HIDE old text */
+            display: none;
         }
-        /* ADDED for new icon images */
+
         .service-item img {
             width: 110px;
             height: 110px;
             object-fit: cover;
             border-radius: 24px;
-             /* The reflection effect */
-            /* CHANGED: reflection closer and darker */
-            -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 50%, rgba(255, 255, 255, 0.25)); 
+            -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 50%, rgba(255, 255, 255, 0.25));
         }
 
         /* Portfolio Section */
         .portfolio-grid {
-            display: none; /* HIDING old grid */
+            display: none;
         }
+
         .portfolio-item {
-            display: none; /* HIDING old item */
+            display: none;
         }
+
         .portfolio-item img {
-            display: none; /* HIDING old img */
+            display: none;
         }
+
         .portfolio-item:hover img {
-            display: none; /* HIDING old img */
+            display: none;
         }
+
         .portfolio-overlay {
-            display: none; /* HIDE OVERLAY */
+            display: none;
         }
+
         .portfolio-item:hover .portfolio-overlay {
-            opacity: 0; /* HIDE OVERLAY */
+            opacity: 0;
         }
+
         .portfolio-overlay h4 {
             font-size: 1.5rem;
             font-weight: 600;
@@ -433,6 +533,7 @@
             transform: translateY(10px);
             transition: transform 0.4s ease;
         }
+
         .portfolio-item:hover .portfolio-overlay h4 {
             transform: translateY(0);
         }
@@ -445,12 +546,15 @@
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
+
         .contact-form .form-group {
             width: 100%;
         }
+
         .contact-form .full-width {
             grid-column: 1 / -1;
         }
+
         .contact-form input,
         .contact-form textarea {
             width: 100%;
@@ -461,84 +565,181 @@
             color: var(--text-color);
             font-family: 'Poppins', sans-serif;
         }
+
         .contact-form input:focus,
         .contact-form textarea:focus {
             outline: none;
             border-color: var(--primary-color);
         }
+
         .contact-form textarea {
             height: 150px;
             resize: none;
         }
+
         .contact-form .btn {
             cursor: pointer;
         }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 992px) {
-            .home-content h1 { font-size: 7vw; }
-            .animated-headline { height: 50px; }
-            .services-grid { grid-template-columns: 1fr 1fr; }
-            .portfolio-grid { grid-template-columns: 1fr 1fr; }
-            #about .about-content { grid-template-columns: 1fr; }
-            #about .about-image { display: none; } /* Hide img on tablet */
+            .home-content h1 {
+                font-size: 7vw;
+            }
+
+            /* --- FIX: Responsive Animation Height --- */
+            .animated-headline {
+                height: 50px;
+            }
+
+            .animated-headline b {
+                height: 50px;
+                line-height: 50px;
+            }
+
+            /* --- END FIX --- */
+            .services-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .portfolio-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            #about .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            #about .about-image {
+                display: none;
+            }
+
+            /* Hide img on tablet */
         }
-        
+
         @media (max-width: 768px) {
-            .header { padding: 20px; }
-            .social-links { display: none; }
-            .scroll-indicator { display: none; }
-            .nav-overlay ul li a { font-size: 8vw; }
-            
-            .section { padding: 80px 20px; }
-            .home-content { padding-left: 0; text-align: center; }
-            .home-content h1 { font-size: 10vw; }
-            .animated-headline { height: 40px; }
+            .header {
+                padding: 20px;
+            }
 
-            .section-title { font-size: 6vw; }
-            .services-grid { grid-template-columns: 1fr; }
-            .portfolio-grid { grid-template-columns: 1fr; }
-            .contact-form { grid-template-columns: 1fr; }
+            .social-links {
+                display: none;
+            }
+
+            .scroll-indicator {
+                display: none;
+            }
+
+            .nav-overlay ul li a {
+                font-size: 8vw;
+            }
+
+            /* --- FIX: Responsive Close Button --- */
+            .close-btn {
+                top: 20px;
+                right: 20px;
+                font-size: 40px;
+            }
+
+            /* --- END FIX --- */
+
+            .section {
+                padding: 80px 20px;
+            }
+
+            .home-content {
+                padding-left: 0;
+                text-align: center;
+            }
+
+            .home-content h1 {
+                font-size: 10vw;
+            }
+
+            /* --- FIX: Responsive Animation Height --- */
+            .animated-headline {
+                height: 40px;
+            }
+
+            .animated-headline b {
+                height: 40px;
+                line-height: 40px;
+            }
+
+            /* --- END FIX --- */
+
+            .section-title {
+                font-size: 6vw;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
         }
-
     </style>
 </head>
+
 <body>
 
-    <!-- === PRELOADER === --><div id="preloader">
+    <!-- === PRELOADER === -->
+    <div id="preloader">
         <div class="loader"></div>
     </div>
 
-    <!-- === NEW INTERACTIVE BACKGROUND === --><div id="interactive-bg"></div>
+    <!-- === NEW INTERACTIVE BACKGROUND === -->
+    <div id="interactive-bg"></div>
 
-    <!-- === HEADER === --><header class="header">
-        <!-- === EDIT HERE === --><a href="#home" class="logo nav-link">YourName</a>
-        <!-- === END EDIT === --><div class="menu-btn">MENU</div>
+    <!-- === HEADER === -->
+    <header class="header">
+        <!-- === EDIT HERE === -->
+        <a href="#home" class="logo nav-link">YourName</a>
+        <!-- === END EDIT === -->
+        <div class="menu-btn">MENU</div>
     </header>
 
-    <!-- === NAVIGATION OVERLAY === --><nav class="nav-overlay">
+    <!-- === NAVIGATION OVERLAY === -->
+    <nav class="nav-overlay">
+        <!-- === FIX: Added Close Button === -->
+        <div class="close-btn">&times;</div>
+        <!-- === END FIX === -->
         <ul>
             <li><a href="#home" class="nav-link">Home</a></li>
-            <li><a href="#about" class->About</a></li>
+            <!-- === FIX: Added missing nav-link class === -->
+            <li><a href="#about" class="nav-link">About</a></li>
+            <!-- === END FIX === -->
             <li><a href="#services" class="nav-link">Skills</a></li>
             <li><a href="#portfolio" class="nav-link">Projects</a></li>
             <li><a href="#contact" class="nav-link">Contact</a></li>
         </ul>
     </nav>
 
-    <!-- === SOCIAL LINKS === --><div class="social-links">
-        <!-- === EDIT HERE === --><a href="#">LinkedIn</a>
+    <!-- === SOCIAL LINKS === -->
+    <div class="social-links">
+        <!-- === EDIT HERE === -->
+        <a href="#">LinkedIn</a>
         <a href="#">Instagram</a>
         <a href="#">Behance</a>
-        <!-- === END EDIT === --></div>
+        <!-- === END EDIT === -->
+    </div>
 
-    <!-- === SCROLL INDICATOR === --><div class="scroll-indicator">
+    <!-- === SCROLL INDICATOR === -->
+    <div class="scroll-indicator">
         SCROLL
     </div>
 
-    <!-- === MAIN CONTENT (SECTIONS) === --><main class="main-content">
+    <!-- === MAIN CONTENT (SECTIONS) === -->
+    <main class="main-content">
 
-        <!-- === HOME SECTION === --><section class="section active" id="home">
+        <!-- === HOME SECTION === -->
+        <section class="section active" id="home">
             <div class="home-content">
                 <h1>
                     <!-- === EDIT HERE === -->Hey, I'm YourName
@@ -546,111 +747,152 @@
                     <span class="animated-headline">
                         I'm a
                         <span class="words-wrapper">
+                            <!-- JS will clone first <b> and append here -->
                             <b class="is-visible">Digital Creator</b>
                             <b>Web Developer</b>
                             <b>UI/UX Designer</b>
                         </span>
                     </span>
-                    <!-- === END EDIT === --></h1>
+                    <!-- === END EDIT === -->
+                </h1>
             </div>
         </section>
 
-        <!-- === ABOUT SECTION === --><section class="section" id="about">
+        <!-- === ABOUT SECTION === -->
+        <section class="section" id="about">
             <div class="section-container">
                 <h2 class="section-title">About Me</h2>
                 <p class="section-subtitle">A little bit about who I am and what I do.</p>
-                
+
                 <div class="about-content">
                     <div class="about-image">
-                        <!-- === EDIT HERE === --><img src="https://placehold.co/600x400/6a5acd/ffffff?text=Your+Photo" 
-                            alt="Your Name"
+                        <!-- === EDIT HERE === -->
+                        <img src="https://placehold.co/600x400/6a5acd/ffffff?text=Your+Photo" alt="Your Name"
                             onerror="this.src='https://placehold.co/600x400/ef4444/ffffff?text=Image+Error';this.onerror=null;">
-                        <!-- === END EDIT === --></div>
+                        <!-- === END EDIT === -->
+                    </div>
                     <div class="about-text">
-                        <!-- === EDIT HERE === --><h3>I'm Your Name, a passionate creator based in Your City.</h3>
+                        <!-- === EDIT HERE === -->
+                        <h3>I'm Your Name, a passionate creator based in Your City.</h3>
                         <p>
-                            I specialize in building beautiful, functional, and user-centric digital experiences. 
-                            With over X years of experience, I've helped clients from all over the world 
+                            I specialize in building beautiful, functional, and user-centric digital experiences.
+                            With over X years of experience, I've helped clients from all over the world
                             bring their visions to life.
                         </p>
                         <p>
-                            Whether it's web design, content creation, or digital strategy, I'm dedicated to 
+                            Whether it's web design, content creation, or digital strategy, I'm dedicated to
                             delivering high-quality work that gets results.
                         </p>
                         <a href="#contact" class="btn nav-link">Let's Talk</a>
-                        <!-- === END EDIT === --></div>
+                        <!-- === END EDIT === -->
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- === SERVICES SECTION === --><section class="section" id="services">
+        <!-- === SERVICES SECTION === -->
+        <section class="section" id="services">
             <div class="section-container">
                 <h2 class="section-title">Skills</h2>
                 <p class="section-subtitle">My technical and creative arsenal.</p>
 
                 <div class="services-grid">
-                    <!-- === EDIT SKILLS HERE === --><!-- Using placeholders for app icons, add your own images here --><div class="service-item">
-                        <img src="https://placehold.co/110x110/111111/ffffff?text=W&font=poppins" alt="Word" title="Word">
+                    <!-- === EDIT SKILLS HERE === -->
+                    <!-- Using placeholders for app icons, add your own images here -->
+                    <div class="service-item">
+                        <img src="https://placehold.co/110x110/111111/ffffff?text=W&font=poppins" alt="Word"
+                            title="Word">
                     </div>
                     <div class="service-item">
-                        <img src="https://placehold.co/110x110/111111/ffffff?text=Figma&font=poppins" alt="Figma" title="Figma">
+                        <img src="https://placehold.co/110x110/111111/ffffff?text=Figma&font=poppins" alt="Figma"
+                            title="Figma">
                     </div>
                     <div class="service-item">
-                        <img src="https://placehold.co/110x110/111111/ffffff?text=Xd&font=poppins" alt="XD" title="Adobe XD">
+                        <img src="https://placehold.co/110x110/111111/ffffff?text=Xd&font=poppins" alt="XD"
+                            title="Adobe XD">
                     </div>
                     <div class="service-item">
-                        <img src="https://placehold.co/110x110/111111/ffffff?text=Ai&font=poppins" alt="Illustrator" title="Adobe Illustrator">
+                        <img src="https://placehold.co/110x110/111111/ffffff?text=Ai&font=poppins" alt="Illustrator"
+                            title="Adobe Illustrator">
                     </div>
                     <div class="service-item">
-                        <img src="https://placehold.co/110x110/111111/ffffff?text=Ps&font=poppins" alt="Photoshop" title="Adobe Photoshop">
+                        <img src="https://placehold.co/110x110/111111/ffffff?text=Ps&font=poppins" alt="Photoshop"
+                            title="Adobe Photoshop">
                     </div>
                     <div class="service-item">
-                        <img src="https://placehold.co/110x110/111111/ffffff?text=Ae&font=poppins" alt="After Effects" title="Adobe After Effects">
+                        <img src="https://placehold.co/110x110/111111/ffffff?text=Ae&font=poppins" alt="After Effects"
+                            title="Adobe After Effects">
                     </div>
-                    <!-- === END EDIT === --></div>
+                    <!-- === END EDIT === -->
+                </div>
             </div>
         </section>
 
-        <!-- === PORTFOLIO SECTION === --><section class="section" id="portfolio">
+        <!-- === PORTFOLIO SECTION === -->
+        <section class="section" id="portfolio">
             <div class="section-container">
                 <h2 class="section-title">Projects</h2>
                 <p class="section-subtitle">A selection of my recent work.</p>
 
-                <!-- === NEW 3D CAROUSEL === --><div class="swiper-container" id="portfolio-swiper">
+                <!-- === NEW 3D CAROUSEL === -->
+                <div class="swiper-container" id="portfolio-swiper">
                     <div class="swiper-wrapper">
-                        <!-- === EDIT PORTFOLIO ITEM 1 === --><div class="swiper-slide">
-                            <img src="https" alt="Project 1">
+                        <!-- === FIX: Replaced broken src="https" with valid placeholders === -->
+                        <!-- === EDIT PORTFOLIO ITEM 1 === -->
+                        <div class="swiper-slide">
+                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+1" alt="Project 1"
+                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
                         </div>
-                        <!-- === EDIT PORTFOLIO ITEM 2 === --><div class="swiper-slide">
-                            <img src="https" alt="Project 2">
+                        <!-- === EDIT PORTFOLIO ITEM 2 === -->
+                        <div class="swiper-slide">
+                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+2" alt="Project 2"
+                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
                         </div>
-                        <!-- === EDIT PORTFOLIO ITEM 3 === --><div class="swiper-slide">
-                            <img src="https" alt="Project 3">
+                        <!-- === EDIT PORTFOLIO ITEM 3 === -->
+                        <div class="swiper-slide">
+                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+3" alt="Project 3"
+                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
                         </div>
-                         <!-- === EDIT PORTFOLIO ITEM 4 === --><div class="swiper-slide">
-                            <img src="https" alt="Project 4">
+                        <!-- === EDIT PORTFOLIO ITEM 4 === -->
+                        <div class="swiper-slide">
+                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+4" alt="Project 4"
+                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
                         </div>
-                        <!-- === FIX for broken item === --><div class="swiper-slide">
-                            <img src="https" alt="Project 5">
+                        <!-- === FIX for broken item === -->
+                        <div class="swiper-slide">
+                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+5" alt="Project 5"
+                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
                         </div>
-                         <!-- === EDIT PORTFOLIO ITEM 6 === --><div class="swiper-slide">
-                            <img src="https" alt="Project 6">
+                        <!-- === EDIT PORTFOLIO ITEM 6 === -->
+                        <div class="swiper-slide">
+                            <img src="httpsimg src=" https://placehold.co/400x280/6a5acd/ffffff?text=Project+6"
+                                alt="Project 6"
+                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
                         </div>
-                        <!-- === END EDIT === --></div>
-                    <!-- Add Pagination --><div class="swiper-pagination"></div>
-                    <!-- Add Navigation --><div class="swiper-button-next"></div>
+                        <!-- === END FIX === -->
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
+                    <!-- Add Navigation -->
+                    <div class="swiper-button-next"></div>
                     <div class="swiper-button-prev"></div>
                 </div>
 
             </div>
         </section>
 
-        <!-- === CONTACT SECTION === --><section class="section" id="contact">
+        <!-- === CONTACT SECTION === -->
+        <section class="section" id="contact">
             <div class="section-container">
                 <h2 class="section-title">Get In Touch</h2>
                 <p class="section-subtitle">Have a project in mind? I'd love to hear from you.</p>
 
-                <!-- This form is for appearance. For GitHub Pages, use a service like Formspree or Netlify Forms --><form class="contact-form" action="https" method="POST">
+                <!-- === OPTIMIZATION: Updated form action for static site (GitHub Pages) === -->
+                <!-- This form is for appearance. For GitHub Pages, use a service like Formspree or Netlify Forms -->
+                <!-- 1. Go to https://formspree.io/ and create a new form. -->
+                <!-- 2. Replace "YOUR_FORM_ID" in the action URL below with your unique Formspree ID. -->
+                <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                    <!-- === END OPTIMIZATION === -->
                     <div class="form-group">
                         <input type="text" name="name" placeholder="Your Name" required>
                     </div>
@@ -673,8 +915,9 @@
 
     </main>
 
-    <!-- === JAVASCRIPT LOGIC === --><script>
-        $(document).ready(function() {
+    <!-- === JAVASCRIPT LOGIC === -->
+    <script>
+        $(document).ready(function () {
 
             // --- Section Navigation ---
             const sections = ['#home', '#about', '#services', '#portfolio', '#contact'];
@@ -682,41 +925,47 @@
             let isThrottled = false; // To prevent rapid scrolling
 
             // --- Preloader ---
-            $(window).on('load', function() {
+            $(window).on('load', function () {
                 $('#preloader').fadeOut(500);
             });
 
             // --- Menu Toggle ---
             const $menuBtn = $('.menu-btn');
             const $navOverlay = $('.nav-overlay');
-            
-            $menuBtn.on('click', function() {
-                $menuBtn.toggleClass('open');
+            const $closeBtn = $('.close-btn'); // --- FIX: Get close button ---
+
+            $menuBtn.on('click', function () {
+                // $menuBtn.toggleClass('open'); // --- OPTIMIZATION: Removed unused class toggle ---
                 $navOverlay.toggleClass('open');
             });
-            
+
+            // --- FIX: Close button click handler ---
+            $closeBtn.on('click', function () {
+                $navOverlay.removeClass('open');
+            });
+            // --- END FIX ---
+
             // --- Navigation Logic ---
-            $('.nav-link').on('click', function(e) {
+            $('.nav-link').on('click', function (e) {
                 e.preventDefault();
                 const targetId = $(this).attr('href');
-                
+
                 // Set active section
                 $('.section').removeClass('active');
                 $(targetId).addClass('active');
-                
+
                 // Update URL hash
                 window.location.hash = targetId;
-                
+
                 // Update current section index
                 currentSectionIndex = sections.indexOf(targetId);
 
                 // Close menu
-                $menuBtn.removeClass('open');
+                // $menuBtn.removeClass('open'); // --- OPTIMIZATION: Removed unused class ---
                 $navOverlay.removeClass('open');
             });
-            
+
             // --- Check for Hash on Load ---
-            // This shows the correct section if the page is loaded with a hash
             const currentHash = window.location.hash;
             if (currentHash && $(currentHash).length) {
                 $('.section').removeClass('active');
@@ -729,61 +978,71 @@
             }
 
             // --- Mouse Wheel "Scroll" Navigation ---
-            $(window).on('wheel', function(e) {
+            $(window).on('wheel', function (e) {
                 if (isThrottled) return;
+                // --- FIX: Prevent scrolling if menu is open ---
+                if ($navOverlay.hasClass('open')) return;
+                // --- END FIX ---
+
                 isThrottled = true;
-                
-                // Determine scroll direction
+
                 const delta = e.originalEvent.deltaY;
-                
+
                 if (delta > 0) {
-                    // Scrolling down
                     currentSectionIndex++;
                 } else {
-                    // Scrolling up
                     currentSectionIndex--;
                 }
-                
-                // Clamp index to stay within bounds
+
                 currentSectionIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex));
-                
-                // Navigate to the new section
+
                 const targetId = sections[currentSectionIndex];
                 $('.section').removeClass('active');
                 $(targetId).addClass('active');
                 window.location.hash = targetId;
-                
-                // Wait for CSS transition to finish before allowing next scroll
+
                 setTimeout(() => {
                     isThrottled = false;
-                }, 700); // CHANGED: 700ms throttle for faster scroll
+                }, 700);
             });
 
 
-            // --- Animated Headline Logic ---
-            (function() {
+            // --- FIX: Re-engineered Animated Headline Logic (Ticker) ---
+            (function () {
                 const animationDelay = 2500;
-                const $headline = $('.animated-headline');
-                const $wordsWrapper = $headline.find('.words-wrapper');
+                const $wordsWrapper = $('.animated-headline .words-wrapper');
                 const $words = $wordsWrapper.find('b');
-                let currentIndex = 0;
 
-                function animateWords() {
-                    const $currentWord = $words.eq(currentIndex);
-                    const $nextWord = (currentIndex + 1 >= $words.length) ? $words.eq(0) : $words.eq(currentIndex + 1);
+                // Check if there are words to animate
+                if ($words.length > 1) {
+                    const wordHeight = $words.eq(0).outerHeight(); // Use outerHeight
+                    let currentIndex = 0;
 
-                    // Hide current word
-                    $currentWord.removeClass('is-visible').addClass('is-hidden');
-                    
-                    // Show next word
-                    $nextWord.removeClass('is-hidden').addClass('is-visible');
+                    // Clone first word and append it to the end for a seamless loop
+                    $words.eq(0).clone().appendTo($wordsWrapper);
 
-                    currentIndex = (currentIndex + 1) % $words.length;
+                    function animateWords() {
+                        currentIndex++;
+                        const newTransform = `translateY(-${currentIndex * wordHeight}px)`;
+
+                        $wordsWrapper.css('transition', 'transform 0.5s ease-in-out');
+                        $wordsWrapper.css('transform', newTransform);
+
+                        // Check if we're at the cloned word
+                        if (currentIndex === $words.length) {
+                            setTimeout(() => {
+                                // Reset to the beginning without an animation
+                                $wordsWrapper.css('transition', 'none');
+                                $wordsWrapper.css('transform', 'translateY(0)');
+                                currentIndex = 0; // Reset index
+                            }, 500); // Must match CSS transition duration
+                        }
+                    }
+
+                    setInterval(animateWords, animationDelay);
                 }
-
-                $words.eq(0).addClass('is-visible'); // Show first word initially
-                setInterval(animateWords, animationDelay);
             })();
+            // --- END FIX ---
 
 
             // --- Interactive Background (Mouse Follow) ---
@@ -793,12 +1052,10 @@
                 if (frame) {
                     cancelAnimationFrame(frame);
                 }
-                // Use animation frame to avoid performance issues
                 frame = requestAnimationFrame(() => {
                     const { clientX, clientY } = e;
                     const x = Math.round((clientX / window.innerWidth) * 100);
                     const y = Math.round((clientY / window.innerHeight) * 100);
-                    // CHANGED: Brighter colors for better visibility
                     $bg.css('background', `radial-gradient(circle at ${x}% ${y}%, #5a5a5a 0%, #111111 40%, #111111 100%)`);
                 });
             });
@@ -811,15 +1068,13 @@
                     grabCursor: true,
                     centeredSlides: true,
                     slidesPerView: 'auto',
-                    /* --- ALL SETTINGS BELOW ARE CHANGED --- */
                     coverflowEffect: {
-                        rotate: 45,       // Steeper angle
-                        stretch: 0,         // No stretch
-                        depth: 150,         // More distance between slides
-                        modifier: 1,        // Standard modifier
-                        slideShadows: true, // Keep shadows
+                        rotate: 45,
+                        stretch: 0,
+                        depth: 150,
+                        modifier: 1,
+                        slideShadows: true,
                     },
-                    /* --- END CHANGED --- */
                     loop: true,
                     pagination: {
                         el: '.swiper-pagination',
@@ -836,4 +1091,5 @@
     </script>
 
 </body>
+
 </html>
