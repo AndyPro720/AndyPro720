@@ -425,6 +425,9 @@ img {
     -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 10%, rgba(106, 90, 205, 0.15));
     /* --- END FIX --- */
 }
+/* REMOVED .is-visible and .is-hidden logic, not needed */
+/* --- END FIX --- */
+
 /* --- OTHER SECTIONS (ABOUT, SERVICES, ETC.) --- */
 .section-title {
     font-size: 3vw;
@@ -713,7 +716,7 @@ img {
         height: auto; /* --- MODIFIED: Allow height to be auto for stacking --- */ 
     }
     .animated-headline b { 
-        height: 70px; 
+        height: 60px; 
         line-height: 60px; 
     }
 
