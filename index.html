@@ -5,923 +5,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- === EDIT HERE === -->
     <title>Your Name - Digital Creator</title>
-    <!-- === END EDIT === -->
-
-    <!-- LIBRARIES -->
-    <!-- jQuery (Required) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <!-- Swiper.js (For 3D Carousel) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.js"></script>
 
-    <!-- === OPTIMIZATION: Moved font import to <head> for performance === -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <!-- STYLES -->
-    <style>
-        /* --- GLOBAL STYLES --- */
-        /* === OPTIMIZATION: @import moved to <head> <link> === */
-        /* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap'); */
-
-        :root {
-            /* === EDIT HERE: Customize Colors === */
-            --primary-color: #6a5acd;
-            /* Indigo */
-            --primary-color-dark: #483d8b;
-            /* Darker Indigo */
-            --bg-color: #111111;
-            --surface-color: #1a1a1a;
-            --text-color: #ffffff;
-            --text-color-secondary: #aaaaaa;
-            /* === END EDIT === */
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            font-family: 'Poppins', sans-serif;
-            /* === FIX: Removed background-color from this rule === */
-            /* background-color: var(--bg-color); */
-            /* === END FIX === */
-            color: var(--text-color);
-            overflow: hidden;
-            /* This is key to the single-page feel */
-            position: relative;
-        }
-
-        /* === FIX: Added html-only rule for fallback background === */
-        html {
-            background-color: var(--bg-color);
-            /* Fallback */
-        }
-
-        /* === END FIX === */
-
-        /* === FIX: Moved animated gradient to pseudo-element === */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(-45deg, #0a0a0a, #1a1a1a, #050505, #111111);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            z-index: -2;
-            /* Sit behind interactive-bg and content */
-        }
-
-        /* === END FIX === */
-
-        a {
-            text-decoration: none;
-            color: var(--primary-color);
-            transition: color 0.3s ease;
-        }
-
-        a:hover,
-        a:active {
-            /* --- FIX: Added :active for mobile --- */
-            color: var(--primary-color-dark);
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        /* --- PRELOADER --- */
-        #preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-color);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s ease;
-        }
-
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--surface-color);
-            border-top-color: var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* === FIX: Added animated gradient keyframes === */
-        @keyframes gradientBG {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        /* === END FIX === */
-
-        /* --- FIX: Re-added Interactive Background --- */
-        #interactive-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            /* Above gradient, behind content */
-            pointer-events: none;
-            /* Won't block clicks */
-            background: transparent;
-            /* Default state */
-        }
-
-        /* === END FIX === */
-
-        /* --- HEADER (LOGO & MENU BUTTON) --- */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 30px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-        }
-
-        .header .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-color);
-        }
-
-        .menu-btn {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-color);
-            cursor: pointer;
-            z-index: 101;
-            /* Above header, below menu */
-            position: relative;
-        }
-
-        /* --- NAVIGATION OVERLAY --- */
-        .nav-overlay {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            /* Start off-screen */
-            width: 100%;
-            height: 100%;
-            background-color: rgba(17, 17, 17, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: right 0.7s cubic-bezier(0.7, 0, 0.3, 1);
-        }
-
-        .nav-overlay.open {
-            right: 0;
-        }
-
-        .nav-overlay ul {
-            list-style: none;
-            text-align: center;
-        }
-
-        .nav-overlay ul li {
-            margin: 20px 0;
-        }
-
-        .nav-overlay ul li a {
-            font-size: 4vw;
-            font-weight: 600;
-            color: var(--text-color);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: color 0.3s ease;
-            /* --- FIX: Added reflection --- */
-            -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 70%, rgba(255, 255, 255, 0.15));
-            /* --- END FIX --- */
-        }
-
-        .nav-overlay ul li a:hover,
-        .nav-overlay ul li a:active {
-            /* --- FIX: Added :active for mobile --- */
-            color: var(--primary-color);
-        }
-
-        /* --- FIX: Added Close Button for Menu --- */
-        .close-btn {
-            position: absolute;
-            top: 30px;
-            right: 40px;
-            font-size: 48px;
-            /* Bigger, easier to click */
-            color: var(--text-color);
-            cursor: pointer;
-            transition: transform 0.3s ease, color 0.3s ease;
-            z-index: 102;
-            /* Above nav links */
-            line-height: 1;
-        }
-
-        .close-btn:hover,
-        .close-btn:active {
-            /* --- FIX: Added :active for mobile --- */
-            color: var(--primary-color);
-            transform: rotate(90deg);
-        }
-
-        /* --- END FIX --- */
-
-        /* --- SOCIAL LINKS --- */
-        .social-links {
-            position: fixed;
-            bottom: 30px;
-            left: 40px;
-            z-index: 10;
-        }
-
-        .social-links a {
-            margin-right: 20px;
-            font-size: 14px;
-            color: var(--text-color-secondary);
-        }
-
-        .social-links a:hover,
-        .social-links a:active {
-            /* --- FIX: Added :active for mobile --- */
-            color: var(--primary-color);
-        }
-
-        /* --- SCROLL INDICATOR --- */
-        .scroll-indicator {
-            position: fixed;
-            bottom: 30px;
-            right: 40px;
-            z-index: 10;
-            font-size: 12px;
-            color: var(--text-color-secondary);
-            transform: rotate(90deg);
-        }
-
-        /* --- MAIN SECTIONS WRAPPER --- */
-        .main-content {
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        /* --- SECTION STYLING (THE KEY) --- */
-        .section {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            padding: 100px 40px;
-            display: flex;
-            justify-content: center;
-            /* === FIX: Reverted to 'center' to fix Home page alignment === */
-            align-items: center;
-            /* Was 'flex-start' */
-            /* === END FIX === */
-
-            overflow-x: hidden;
-            /* --- FIX: Prevents horizontal scroll from swiper --- */
-
-            /* --- FIX: Removed global overflow --- */
-            /* overflow-y: auto; */
-            /* --- END FIX --- */
-
-            /* Transition */
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(50px);
-            /* Start 50px down */
-            /* --- FIX: Faster transition speed --- */
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out, visibility 0.5s;
-            /* --- END FIX --- */
-            z-index: 2;
-            /* Above interactive-bg */
-        }
-
-        .section.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            /* Slide to 0 */
-            z-index: 3;
-            /* Above other sections */
-        }
-
-        .section-container {
-            max-width: 1200px;
-            width: 100%;
-            text-align: center;
-            position: relative;
-            z-index: 3;
-        }
-
-        /* --- FIX: Add scroll only to long sections --- */
-        #about,
-        #services,
-        #portfolio {
-            align-items: flex-start;
-            /* Override vertical centering */
-            overflow-y: auto;
-            /* Allow scrolling *within* these sections */
-        }
-
-        /* --- END FIX --- */
-
-        /* --- HOME SECTION --- */
-        #home {
-            justify-content: flex-start;
-            /* Fixes centering issue */
-            text-align: left;
-        }
-
-        .home-content {
-            position: relative;
-            z-index: 2;
-            padding-left: 10%;
-        }
-
-        .home-content h1 {
-            font-size: 5vw;
-            font-weight: 700;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-
-        /* --- FIX: Added reflection to static part of headline --- */
-        .home-content h1 .static-headline {
-            display: inline-block;
-            /* Required for reflection */
-            -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 70%, rgba(255, 255, 255, 0.15));
-        }
-
-        /* --- END FIX --- */
-        .home-content h1 span {
-            color: var(--primary-color);
-        }
-
-        /* --- FIX: Animated Headline (Re-engineered) --- */
-        .animated-headline {
-            display: block;
-            position: relative;
-            height: 60px;
-            /* Adjust height based on font size */
-            overflow: hidden;
-            /* ADDED */
-        }
-
-        /* --- FIX: Added reflection to "I'm a" prefix --- */
-        .home-content h1 .animated-headline .static-prefix {
-            display: inline-block;
-            -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 70%, rgba(255, 255, 255, 0.15));
-        }
-
-        /* --- END FIX --- */
-        .animated-headline .words-wrapper {
-            display: inline-block;
-            position: relative;
-            /* CHANGED */
-            transform: translateY(0);
-            transition: transform 0.5s ease-in-out;
-            /* ADDED */
-        }
-
-        .animated-headline b {
-            display: block;
-            /* CHANGED */
-            position: relative;
-            /* CHANGED */
-            left: auto;
-            /* RESET */
-            top: auto;
-            /* RESET */
-            opacity: 1;
-            /* CHANGED */
-            width: auto;
-            /* CHANGED */
-            height: 60px;
-            /* Match parent */
-            line-height: 60px;
-            /* Center text */
-            color: var(--primary-color);
-            transition: none;
-            /* RESET */
-            /* --- FIX: Added reflection --- */
-            -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 70%, rgba(255, 255, 255, 0.15));
-            /* --- END FIX --- */
-        }
-
-        /* REMOVED .is-visible and .is-hidden logic, not needed */
-        /* --- END FIX --- */
-
-        /* --- OTHER SECTIONS (ABOUT, SERVICES, ETC.) --- */
-        .section-title {
-            font-size: 3vw;
-            font-weight: 700;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        .section-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-color-secondary);
-            margin-bottom: 50px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* About Section */
-        #about .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            text-align: left;
-            align-items: center;
-        }
-
-        #about .about-image img {
-            border-radius: 10px;
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-        }
-
-        #about .about-text h3 {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        #about .about-text p {
-            font-size: 1rem;
-            color: var(--text-color-secondary);
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            border: 2px solid var(--primary-color);
-            border-radius: 30px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn:hover,
-        .btn:active {
-            /* --- FIX: Added :active for mobile --- */
-            background-color: transparent;
-            color: var(--primary-color);
-        }
-
-        /* --- 3D Carousel (Swiper.js) Styles --- */
-        .swiper-container {
-            width: 100%;
-            padding-top: 50px;
-            padding-bottom: 50px;
-            perspective: 1200px;
-            overflow: visible;
-        }
-
-        .swiper-slide {
-            background-position: center;
-            background-size: cover;
-            width: 400px;
-            height: 280px;
-            border-radius: 10px;
-            overflow: hidden;
-            /* --- FIX: Darker reflection --- */
-            -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 70%, rgba(255, 255, 255, 0.15));
-            /* --- END FIX --- */
-        }
-
-        .swiper-slide img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .swiper-button-next::after,
-        .swiper-button-prev::after {
-            font-size: 24px !important;
-            color: var(--primary-color);
-        }
-
-        .swiper-pagination-bullet {
-            background: var(--text-color-secondary);
-        }
-
-        .swiper-pagination-bullet-active {
-            background: var(--primary-color);
-        }
-
-        /* --- End Swiper.js Styles --- */
-
-
-        /* Services Section */
-        .services-grid {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 40px;
-            flex-wrap: wrap;
-        }
-
-        .service-item {
-            background-color: transparent;
-            padding: 0;
-            border-radius: 0;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .service-item:hover,
-        .service-item:active {
-            /* --- FIX: Added :active for mobile --- */
-            transform: translateY(-10px);
-        }
-
-        .service-item .icon {
-            display: none;
-        }
-
-        .service-item h4 {
-            display: none;
-        }
-
-        .service-item p {
-            display: none;
-        }
-
-        .service-item img {
-            width: 110px;
-            height: 110px;
-            object-fit: cover;
-            border-radius: 24px;
-            /* --- FIX: Darker reflection --- */
-            -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 50%, rgba(255, 255, 255, 0.15));
-            /* --- END FIX --- */
-        }
-
-        /* Portfolio Section */
-        .portfolio-grid {
-            display: none;
-        }
-
-        .portfolio-item {
-            display: none;
-        }
-
-        .portfolio-item img {
-            display: none;
-        }
-
-        .portfolio-item:hover img {
-            display: none;
-        }
-
-        .portfolio-overlay {
-            display: none;
-        }
-
-        .portfolio-item:hover .portfolio-overlay {
-            opacity: 0;
-        }
-
-        .portfolio-overlay h4 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-color);
-            transform: translateY(10px);
-            transition: transform 0.4s ease;
-        }
-
-        .portfolio-item:hover .portfolio-overlay h4 {
-            transform: translateY(0);
-        }
-
-        /* Contact Section */
-        .contact-form {
-            max-width: 700px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .contact-form .form-group {
-            width: 100%;
-        }
-
-        .contact-form .full-width {
-            grid-column: 1 / -1;
-        }
-
-        .contact-form input,
-        .contact-form textarea {
-            width: 100%;
-            padding: 15px;
-            background-color: var(--surface-color);
-            border: 1px solid var(--surface-color);
-            border-radius: 5px;
-            color: var(--text-color);
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .contact-form input:focus,
-        .contact-form textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        .contact-form textarea {
-            height: 150px;
-            resize: none;
-        }
-
-        .contact-form .btn {
-            cursor: pointer;
-        }
-
-        /* --- RESPONSIVE --- */
-        /* --- FIX: Rebuilt responsive rules to fix overflows --- */
-        @media (max-width: 992px) {
-            .home-content h1 {
-                font-size: 7vw;
-            }
-
-            /* Use fixed px for headline height to prevent wrapping */
-            .animated-headline {
-                height: 50px;
-                white-space: nowrap;
-            }
-
-            .animated-headline b {
-                height: 50px;
-                line-height: 50px;
-            }
-
-            /* This rule fixes the "About Me" overflow */
-            #about .about-content {
-                grid-template-columns: 1fr;
-            }
-
-            #about .about-image {
-                display: none;
-                /* Hide img on tablet */
-            }
-
-            /* Tablet-specific layout for services */
-            .services-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                padding: 20px;
-            }
-
-            .social-links {
-                display: none;
-            }
-
-            .scroll-indicator {
-                display: none;
-            }
-
-            .nav-overlay ul li a {
-                font-size: 8vw;
-            }
-
-            .close-btn {
-                top: 20px;
-                right: 20px;
-                font-size: 40px;
-            }
-
-            .section {
-                padding: 80px 20px;
-            }
-
-            .home-content {
-                padding-left: 0;
-                text-align: center;
-            }
-
-            .home-content h1 {
-                font-size: 10vw;
-            }
-
-            .animated-headline {
-                height: 40px;
-            }
-
-            .animated-headline b {
-                height: 40px;
-                line-height: 40px;
-            }
-
-            .section-title {
-                font-size: 6vw;
-            }
-
-            /* --- FIX: Make "About Me" text more compact on mobile --- */
-            #about .about-text h3 {
-                font-size: 1.5rem;
-                margin-bottom: 15px;
-            }
-
-            #about .about-text p {
-                font-size: 0.9rem;
-                line-height: 1.6;
-            }
-
-            /* --- END FIX --- */
-
-            /* Mobile-specific layouts */
-            /* --- FIX: Added responsive width for swiper slides --- */
-            .swiper-slide {
-                width: 300px;
-            }
-
-            /* --- END FIX --- */
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-form {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* --- FIX: Make content more compact on short viewports --- */
-        @media (max-height: 750px) and (min-width: 769px) {
-            /* Target medium-height desktops/tablets, but not phones */
-
-            #about .about-content {
-                gap: 20px;
-                /* Reduce gap */
-            }
-
-            #about .about-text h3 {
-                font-size: 1.5rem;
-                /* Smaller heading */
-                margin-bottom: 10px;
-            }
-
-            #about .about-text p {
-                font-size: 0.9rem;
-                /* Smaller text */
-                line-height: 1.6;
-                margin-bottom: 15px;
-            }
-
-            .section {
-                /* Reduce vertical padding */
-                padding-top: 80px;
-                padding-bottom: 20px;
-            }
-
-            .section-subtitle {
-                margin-bottom: 30px;
-                /* Less margin */
-            }
-
-            #about .about-image img {
-                height: 300px;
-                /* Smaller image */
-            }
-        }
-
-        /* --- END FIX --- */
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- === PRELOADER === -->
     <div id="preloader">
         <div class="loader"></div>
     </div>
 
-    <!-- === FIX: Re-added mouse-follow background element === -->
     <div id="interactive-bg"></div>
 
-    <!-- === HEADER === -->
     <header class="header">
-        <!-- === EDIT HERE === -->
         <a href="#home" class="logo nav-link">YourName</a>
-        <!-- === END EDIT === -->
         <div class="menu-btn">MENU</div>
     </header>
 
-    <!-- === NAVIGATION OVERLAY === -->
     <nav class="nav-overlay">
-        <!-- === FIX: Added Close Button === -->
         <div class="close-btn">&times;</div>
-        <!-- === END FIX === -->
         <ul>
             <li><a href="#home" class="nav-link">Home</a></li>
-            <!-- === FIX: Added missing nav-link class === -->
             <li><a href="#about" class="nav-link">About</a></li>
-            <!-- === END FIX === -->
             <li><a href="#services" class="nav-link">Skills</a></li>
             <li><a href="#portfolio" class="nav-link">Projects</a></li>
             <li><a href="#contact" class="nav-link">Contact</a></li>
         </ul>
     </nav>
 
-    <!-- === SOCIAL LINKS === -->
     <div class="social-links">
-        <!-- === EDIT HERE === -->
         <a href="#">LinkedIn</a>
         <a href="#">Instagram</a>
         <a href="#">Behance</a>
-        <!-- === END EDIT === -->
     </div>
 
-    <!-- === SCROLL INDICATOR === -->
     <div class="scroll-indicator">
         SCROLL
     </div>
 
-    <!-- === MAIN CONTENT (SECTIONS) === -->
     <main class="main-content">
 
-        <!-- === HOME SECTION === -->
         <section class="section active" id="home">
             <div class="home-content">
                 <h1>
-                    <!-- === EDIT HERE === -->
-                    <!-- --- FIX: Wrapped static text in span for reflection --- -->
                     <span class="static-headline">Hey, I'm YourName</span>
-                    <!-- --- END FIX --- -->
                     <br>
                     <span class="animated-headline">
-                        <!-- --- FIX: Wrapped "I'm a" in span for reflection --- -->
                         <span class="static-prefix">I'm a</span>
-                        <!-- --- END FIX --- -->
                         <span class="words-wrapper">
-                            <!-- JS will clone first <b> and append here -->
                             <b class="is-visible">Digital Creator</b>
                             <b>Web Developer</b>
                             <b>UI/UX Designer</b>
                         </span>
                     </span>
-                    <!-- === END EDIT === -->
                 </h1>
             </div>
         </section>
 
-        <!-- === ABOUT SECTION === -->
         <section class="section" id="about">
             <div class="section-container">
                 <h2 class="section-title">About Me</h2>
@@ -929,13 +79,10 @@
 
                 <div class="about-content">
                     <div class="about-image">
-                        <!-- === EDIT HERE === -->
                         <img src="https://placehold.co/600x400/6a5acd/ffffff?text=Your+Photo" alt="Your Name"
                             onerror="this.src='https://placehold.co/600x400/ef4444/ffffff?text=Image+Error';this.onerror=null;">
-                        <!-- === END EDIT === -->
                     </div>
                     <div class="about-text">
-                        <!-- === EDIT HERE === -->
                         <h3>I'm Your Name, a passionate creator based in Your City.</h3>
                         <p>
                             I specialize in building beautiful, functional, and user-centric digital experiences.
@@ -947,21 +94,17 @@
                             delivering high-quality work that gets results.
                         </p>
                         <a href="#contact" class="btn nav-link">Let's Talk</a>
-                        <!-- === END EDIT === -->
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- === SERVICES SECTION === -->
         <section class="section" id="services">
             <div class="section-container">
                 <h2 class="section-title">Skills</h2>
                 <p class="section-subtitle">My technical and creative arsenal.</p>
 
                 <div class="services-grid">
-                    <!-- === EDIT SKILLS HERE === -->
-                    <!-- Using placeholders for app icons, add your own images here -->
                     <div class="service-item">
                         <img src="https://placehold.co/110x110/111111/ffffff?text=W&font=poppins" alt="Word"
                             title="Word">
@@ -986,56 +129,43 @@
                         <img src="https://placehold.co/110x110/111111/ffffff?text=Ae&font=poppins" alt="After Effects"
                             title="Adobe After Effects">
                     </div>
-                    <!-- === END EDIT === -->
                 </div>
             </div>
         </section>
 
-        <!-- === PORTFOLIO SECTION === -->
         <section class="section" id="portfolio">
             <div class="section-container">
                 <h2 class="section-title">Projects</h2>
                 <p class="section-subtitle">A selection of my recent work.</p>
 
-                <!-- === NEW 3D CAROUSEL === -->
                 <div class="swiper-container" id="portfolio-swiper">
                     <div class="swiper-wrapper">
-                        <!-- === FIX: Replaced broken src="https" with valid placeholders === -->
-                        <!-- === EDIT PORTFOLIO ITEM 1 === -->
                         <div class="swiper-slide">
                             <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+1" alt="Project 1"
                                 onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
                         </div>
-                        <!-- === EDIT PORTFOLIO ITEM 2 === -->
                         <div class="swiper-slide">
                             <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+2" alt="Project 2"
                                 onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
                         </div>
-                        <!-- === EDIT PORTFOLIO ITEM 3 === -->
                         <div class="swiper-slide">
                             <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+3" alt="Project 3"
                                 onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
                         </div>
-                        <!-- === EDIT PORTFOLIO ITEM 4 === -->
                         <div class="swiper-slide">
                             <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+4" alt="Project 4"
                                 onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
                         </div>
-                        <!-- === FIX for broken item === -->
                         <div class="swiper-slide">
                             <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+5" alt="Project 5"
                                 onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
                         </div>
-                        <!-- === GEMINI FIX: Corrected broken image tag below === -->
                         <div class="swiper-slide">
                             <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+6" alt="Project 6"
                                 onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
                         </div>
-                        <!-- === END FIX === -->
                     </div>
-                    <!-- Add Pagination -->
                     <div class="swiper-pagination"></div>
-                    <!-- Add Navigation -->
                     <div class="swiper-button-next"></div>
                     <div class="swiper-button-prev"></div>
                 </div>
@@ -1043,22 +173,12 @@
             </div>
         </section>
 
-        <!-- === CONTACT SECTION === -->
         <section class="section" id="contact">
             <div class="section-container">
                 <h2 class="section-title">Get In Touch</h2>
                 <p class="section-subtitle">Have a project in mind? I'd love to hear from you.</p>
 
-                <!-- === OPTIMIZATION: Updated form action for static site (GitHub Pages) === -->
-                <!--
-                    IMPORTANT!
-                    To make this form work, you MUST:
-                    1. Go to https://formspree.io/
-                    2. Create a new form.
-                    3. Replace "YOUR_FORM_ID" in the 'action' URL below with your unique Formspree ID.
-                -->
                 <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-                    <!-- === END OPTIMIZATION === -->
                     <div class="form-group">
                         <input type="text" name="name" placeholder="Your Name" required>
                     </div>
@@ -1081,251 +201,7 @@
 
     </main>
 
-    <!-- === JAVASCRIPT LOGIC === -->
-    <script>
-        $(document).ready(function () {
-
-            // --- Section Navigation ---
-            const sections = ['#home', '#about', '#services', '#portfolio', '#contact'];
-            let touchStartY = 0;
-            let touchEndY = 0;
-            // --- FIX: Added missing variable declarations ---
-            let isThrottled = false;
-            let currentSectionIndex = 0;
-            // --- END FIX ---
-
-            // --- Preloader ---
-            $(window).on('load', function () {
-                $('#preloader').fadeOut(500);
-
-                // --- FIX: Moved Animated Headline Logic to window.load ---
-                // This ensures fonts are loaded and height calculation is correct
-                (function () {
-                    const animationDelay = 2500;
-                    const $wordsWrapper = $('.animated-headline .words-wrapper');
-                    const $words = $wordsWrapper.find('b');
-
-                    // Check if there are words to animate
-                    if ($words.length > 1) {
-                        // --- FIX: Use outerHeight(true) to include margins if any ---
-                        const wordHeight = $words.eq(0).outerHeight();
-                        let currentIndex = 0;
-
-                        // Clone first word and append it to the end for a seamless loop
-                        $words.eq(0).clone().appendTo($wordsWrapper);
-
-                        function animateWords() {
-                            currentIndex++;
-                            const newTransform = `translateY(-${currentIndex * wordHeight}px)`;
-
-                            $wordsWrapper.css('transition', 'transform 0.5s ease-in-out');
-                            $wordsWrapper.css('transform', newTransform);
-
-                            // Check if we're at the cloned word
-                            if (currentIndex === $words.length) {
-                                setTimeout(() => {
-                                    // Reset to the beginning without an animation
-                                    $wordsWrapper.css('transition', 'none');
-                                    $wordsWrapper.css('transform', 'translateY(0)');
-                                    currentIndex = 0; // Reset index
-                                }, 500); // Must match CSS transition duration
-                            }
-                        }
-
-                        setInterval(animateWords, animationDelay);
-                    }
-                })();
-                // --- END FIX ---
-            });
-
-            // --- Menu Toggle ---
-            const $menuBtn = $('.menu-btn');
-            const $navOverlay = $('.nav-overlay');
-            const $closeBtn = $('.close-btn'); // --- FIX: Get close button ---
-
-            $menuBtn.on('click', function () {
-                // $menuBtn.toggleClass('open'); // --- OPTIMIZATION: Removed unused class toggle ---
-                $navOverlay.toggleClass('open');
-            });
-
-            // --- FIX: Close button click handler ---
-            $closeBtn.on('click', function () {
-                $navOverlay.removeClass('open');
-            });
-            // --- END FIX ---
-
-            // --- Navigation Logic ---
-            $('.nav-link').on('click', function (e) {
-                e.preventDefault();
-                const targetId = $(this).attr('href');
-
-                // Set active section
-                $('.section').removeClass('active');
-                $(targetId).addClass('active');
-
-                // Update URL hash
-                window.location.hash = targetId;
-
-                // Update current section index
-                currentSectionIndex = sections.indexOf(targetId);
-
-                // Close menu
-                // $menuBtn.removeClass('open'); // --- OPTIMIZATION: Removed unused class ---
-                $navOverlay.removeClass('open');
-            });
-
-            // --- Check for Hash on Load ---
-            const currentHash = window.location.hash;
-            if (currentHash && $(currentHash).length) {
-                $('.section').removeClass('active');
-                $(currentHash).addClass('active');
-                currentSectionIndex = sections.indexOf(currentHash); // Set index
-            } else {
-                // Default to home if no hash
-                $('#home').addClass('active');
-                currentSectionIndex = 0; // Set index
-            }
-
-            // --- Mouse Wheel "Scroll" Navigation ---
-            $(window).on('wheel', function (e) {
-                if (isThrottled) return;
-                // --- FIX: Prevent scrolling if menu is open ---
-                if ($navOverlay.hasClass('open')) return;
-                // --- END FIX ---
-
-                isThrottled = true;
-
-                const delta = e.originalEvent.deltaY;
-
-                if (delta > 0) {
-                    currentSectionIndex++;
-                } else {
-                    currentSectionIndex--;
-                }
-
-                currentSectionIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex));
-
-                const targetId = sections[currentSectionIndex];
-                $('.section').removeClass('active');
-                $(targetId).addClass('active');
-                window.location.hash = targetId;
-
-                setTimeout(() => {
-                    isThrottled = false;
-                }, 550); // --- FIX: Faster scroll throttle (550ms) ---
-            });
-
-            // --- FIX: Touch Swipe Navigation for Mobile ---
-            $(window).on('touchstart', function (e) {
-                if ($navOverlay.hasClass('open')) return;
-                touchStartY = e.originalEvent.touches[0].clientY;
-            });
-
-            $(window).on('touchend', function (e) {
-                if ($navOverlay.hasClass('open')) return;
-                touchEndY = e.originalEvent.changedTouches[0].clientY;
-                handleSwipe();
-            });
-
-            function handleSwipe() {
-                if (isThrottled) return;
-
-                // Check for significant swipe
-                if (Math.abs(touchStartY - touchEndY) > 50) { // 50px threshold
-                    isThrottled = true;
-
-                    if (touchStartY > touchEndY) {
-                        // Swiped Up
-                        currentSectionIndex++;
-                    } else {
-                        // Swiped Down
-                        currentSectionIndex--;
-                    }
-
-                    // Clamp index
-                    currentSectionIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex));
-
-                    // Navigate
-                    const targetId = sections[currentSectionIndex];
-                    $('.section').removeClass('active');
-                    $(targetId).addClass('active');
-                    window.location.hash = targetId;
-
-                    // Reset throttle
-                    setTimeout(() => {
-                        isThrottled = false;
-                    }, 550); // --- FIX: Faster scroll throttle (550ms) ---
-                }
-            }
-            // --- END FIX ---
-
-
-            // --- FIX: Re-engineered Animated Headline Logic (Ticker) ---
-            /* --- MOVED TO $(window).on('load', ...) --- */
-            // --- END FIX ---
-
-
-            // --- FIX: Re-added Interactive Background (Mouse Follow) JS ---
-            // Only run this for non-touch devices
-            let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-            if (!isTouchDevice) {
-                const $bg = $('#interactive-bg');
-                let frame;
-
-                $(window).on('mousemove', (e) => {
-                    if (frame) {
-                        cancelAnimationFrame(frame);
-                    }
-                    frame = requestAnimationFrame(() => {
-                        const { clientX, clientY } = e;
-                        const x = Math.round((clientX / window.innerWidth) * 100);
-                        const y = Math.round((clientY / window.innerHeight) * 100);
-
-                        // --- FIX: Brighter, colored gradient "spotlight" ---
-                        $bg.css('background', `radial-gradient(circle at ${x}% ${y}%, rgba(106, 90, 205, 0.35) 0%, rgba(106, 90, 205, 0.1) 20%, transparent 40%)`);
-                        // --- END FIX ---
-                    });
-                });
-            } else {
-                // On touch devices, just remove the element
-                // --- CLARIFICATION ---
-                // NOTE: The radial gradient "light" effect is *only* for mouse movement.
-                // It is intentionally disabled on touch devices as there is no "mousemove" event.
-                // The ":active" styles in the CSS (which you can test by tapping & holding a button) 
-                // handle the "tap" feedback for buttons and links.
-                $('#interactive-bg').remove();
-            }
-            // --- END FIX ---
-
-
-            // --- Swiper.js Initialization (3D Carousel) ---
-            if ($('#portfolio-swiper').length) {
-                var swiper = new Swiper('#portfolio-swiper', {
-                    effect: 'coverflow',
-                    grabCursor: true,
-                    centeredSlides: true,
-                    slidesPerView: 'auto',
-                    coverflowEffect: {
-                        rotate: 45,
-                        stretch: 0,
-                        depth: 150,
-                        modifier: 1,
-                        slideShadows: true,
-                    },
-                    loop: true,
-                    pagination: {
-                        el: '.swiper-pagination',
-                        clickable: true,
-                    },
-                    navigation: {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    },
-                });
-            }
-
-        });
-    </script>
+    <script src="script.js"></script>
 
 </body>
 
