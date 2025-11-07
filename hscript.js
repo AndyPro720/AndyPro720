@@ -50,8 +50,10 @@ $(document).ready(function() {
         }
 
         function animate() {
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // *** THIS IS THE FIX ***
+            // Clears the canvas instead of filling it with black,
+            // allowing the CSS background and glow to show through.
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Draw glassmorphism orbs
             orbs.forEach(orb => {
@@ -122,12 +124,10 @@ $(document).ready(function() {
     const sections = ['#home', '#about', '#services', '#portfolio', '#contact'];
     let touchStartY = 0;
     let touchEndY = 0;
-    // --- FIX: Added missing variable declarations ---
     let isThrottled = false; 
     let currentSectionIndex = 0;
-    // --- END FIX ---
 
-    // --- Preloader (UPDATED with Fail-safe) ---
+    // --- Preloader (with Fail-safe) ---
     let preloaderFaded = false;
     function hidePreloader() {
         if (!preloaderFaded) {
@@ -140,16 +140,13 @@ $(document).ready(function() {
     $(window).on('load', function() {
         hidePreloader();
 
-        // --- FIX: Moved Animated Headline Logic to window.load ---
-        // This ensures fonts are loaded and height calculation is correct
+        // Animated Headline Logic
         (function() {
             const animationDelay = 2500;
             const $wordsWrapper = $('.animated-headline .words-wrapper');
             const $words = $wordsWrapper.find('b');
             
-            // Check if there are words to animate
             if ($words.length > 1) {
-                // --- FIX: Use outerHeight(true) to include margins if any ---
                 const wordHeight = $words.eq(0).outerHeight(); 
                 let currentIndex = 0;
 
@@ -177,66 +174,54 @@ $(document).ready(function() {
                 setInterval(animateWords, animationDelay);
             }
         })();
-        // --- END FIX ---
     });
 
     // 2. Fail-safe: Hide after 3 seconds anyway
     setTimeout(hidePreloader, 3000);
-    // --- END PRELOADER UPDATE ---
 
     // --- Menu Toggle ---
     const $menuBtn = $('.menu-btn');
     const $navOverlay = $('.nav-overlay');
-    const $closeBtn = $('.close-btn'); // --- FIX: Get close button ---
+    const $closeBtn = $('.close-btn');
     
     $menuBtn.on('click', function() {
-        // $menuBtn.toggleClass('open'); // --- OPTIMIZATION: Removed unused class toggle ---
         $navOverlay.toggleClass('open');
 
-        // --- NEW: Focus management ---
         if ($navOverlay.hasClass('open')) {
             // Set focus to first link after transition
             setTimeout(() => {
                 $navOverlay.find('ul li a').first().focus();
             }, 700); // Match CSS transition duration
         }
-        // --- END NEW ---
     });
     
-    // --- FIX: Close button click handler ---
     $closeBtn.on('click', function() {
         $navOverlay.removeClass('open');
-        $menuBtn.focus(); // --- NEW: Return focus
+        $menuBtn.focus(); // Return focus
     });
-    // --- END FIX ---
     
     // --- Navigation Logic ---
     $('.nav-link').on('click', function(e) {
         e.preventDefault();
         const targetId = $(this).attr('href');
         
-        // Set active section
         $('.section').removeClass('active');
         $(targetId).addClass('active');
         
-        // Update URL hash
         window.location.hash = targetId;
         
-        // Update current section index
         currentSectionIndex = sections.indexOf(targetId);
 
-        // --- NEW: Hide/Show Scroll Indicator ---
+        // Hide/Show Scroll Indicator
         if (currentSectionIndex === 0) {
             $('.scroll-indicator').fadeIn(300);
         } else {
             $('.scroll-indicator').fadeOut(300);
         }
-        // --- END NEW ---
 
         // Close menu
-        // $menuBtn.removeClass('open'); // --- OPTIMIZATION: Removed unused class ---
         $navOverlay.removeClass('open');
-        $menuBtn.focus(); // --- NEW: Return focus
+        $menuBtn.focus(); // Return focus
     });
     
     // --- Check for Hash on Load ---
@@ -251,20 +236,17 @@ $(document).ready(function() {
         currentSectionIndex = 0; // Set index
     }
 
-    // --- NEW: Set initial scroll indicator state ---
+    // Set initial scroll indicator state
     if (currentSectionIndex === 0) {
         $('.scroll-indicator').show();
     } else {
         $('.scroll-indicator').hide();
     }
-    // --- END NEW ---
 
     // --- Mouse Wheel "Scroll" Navigation ---
     $(window).on('wheel', function(e) {
         if (isThrottled) return;
-        // --- FIX: Prevent scrolling if menu is open ---
         if ($navOverlay.hasClass('open')) return;
-        // --- END FIX ---
 
         isThrottled = true;
         
@@ -283,20 +265,19 @@ $(document).ready(function() {
         $(targetId).addClass('active');
         window.location.hash = targetId;
         
-        // --- NEW: Hide/Show Scroll Indicator ---
+        // Hide/Show Scroll Indicator
         if (currentSectionIndex === 0) {
             $('.scroll-indicator').fadeIn(300);
         } else {
             $('.scroll-indicator').fadeOut(300);
         }
-        // --- END NEW ---
 
         setTimeout(() => {
             isThrottled = false;
-        }, 750); // --- FIX: Faster scroll throttle (550ms) ---
+        }, 750);
     });
 
-    // --- FIX: Touch Swipe Navigation for Mobile ---
+    // --- Touch Swipe Navigation for Mobile ---
     $(window).on('touchstart', function(e) {
         if ($navOverlay.hasClass('open')) return;
         touchStartY = e.originalEvent.touches[0].clientY;
@@ -332,29 +313,21 @@ $(document).ready(function() {
             $(targetId).addClass('active');
             window.location.hash = targetId;
             
-            // --- NEW: Hide/Show Scroll Indicator ---
+            // Hide/Show Scroll Indicator
             if (currentSectionIndex === 0) {
                 $('.scroll-indicator').fadeIn(300);
             } else {
                 $('.scroll-indicator').fadeOut(300);
             }
-            // --- END NEW ---
 
             // Reset throttle
             setTimeout(() => {
                 isThrottled = false;
-            }, 550); // --- FIX: Faster scroll throttle (550ms) ---
+            }, 750);
         }
     }
-    // --- END FIX ---
 
-
-    // --- FIX: Re-engineered Animated Headline Logic (Ticker) ---
-    /* --- MOVED TO $(window).on('load', ...) --- */
-    // --- END FIX ---
-
-
-    // Only run this for non-touch devices
+    // --- Mouse Glow Effect ---
     let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (!isTouchDevice) {
         const $bg = $('#interactive-bg');
@@ -369,21 +342,13 @@ $(document).ready(function() {
                 const x = Math.round((clientX / window.innerWidth) * 100);
                 const y = Math.round((clientY / window.innerHeight) * 100);
                 
-                // --- FIX: Brighter, colored gradient "spotlight" ---
-                /* --- MODIFIED: Shrunk radius for a smaller hover area --- */
-                $bg.css('background', `radial-gradient(circle at ${x}% ${y}%,rgba(140, 25, 25, 0.87) 0%, rgba(67, 53, 160, 0.21) 3%, transparent 10%)`);
+                $bg.css('background', `radial-gradient(circle at ${x}% ${y}%,rgba(79, 59, 159, 0.23) 0%, rgba(67, 53, 160, 0.21) 2%, transparent 7%)`);
             });
         });
     } else {
         // On touch devices, just remove the element
-        // --- CLARIFICATION ---
-        // NOTE: The radial gradient "light" effect is *only* for mouse movement.
-        // It is intentionally disabled on touch devices as there is no "mousemove" event.
-        // The ":active" styles in the CSS (which you can test by tapping & holding a button) 
-        // handle the "tap" feedback for buttons and links.
         $('#interactive-bg').remove();
     }
-    // --- END FIX ---
 
 
     // --- Swiper.js Initialization (3D Carousel) ---
