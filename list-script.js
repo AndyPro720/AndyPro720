@@ -1,4 +1,3 @@
-// This script now looks for elements inside #rankings
 class AnimationManager {
   constructor() {
     this.backgroundImage = document.getElementById("portfolioBackgroundImage");
@@ -241,3 +240,4 @@ document.addEventListener("DOMContentLoaded", () => {
   const animationManager = new AnimationManager();
   animationManager.initializeAnimations();
 });
+

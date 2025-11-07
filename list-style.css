@@ -209,6 +209,7 @@
   }
 
   #rankings .background-image {
-    display: none; /* Hide image on mobile */
+    width: 400px;
+    height: 300px;
   }
 }
