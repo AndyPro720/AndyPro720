@@ -116,8 +116,19 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // 3. Optimize Particle Density for Mobile
-    // Samples fewer pixels on mobile for better performance
-    const pixelStep = canvas.width <= 768 ? 5 : 3; 
+    // Use a denser sampling on phones (smaller step -> more particles).
+    // Balance quality vs performance using devicePixelRatio and width.
+    const dpr = window.devicePixelRatio || 1;
+    let pixelStep;
+    if (canvas.width <= 480) { // small phones
+        pixelStep = 2; // denser on small phones
+    } else if (canvas.width <= 768) { // phones / large phones
+        pixelStep = 2; // denser on phones than before (was 5)
+    } else if (canvas.width <= 1200) { // tablet
+        pixelStep = 3;
+    } else { // desktop
+        pixelStep = 3;
+    }
     
     for (let y = 0; y < imageData.height; y += pixelStep) {
         for (let x = 0; x < imageData.width; x += pixelStep) {
