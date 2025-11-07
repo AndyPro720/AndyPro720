@@ -1,0 +1,214 @@
+/* Import the font needed for this section */
+@font-face {
+  font-family: "PP Supply Mono";
+  src: url("https://assets.codepen.io/7558/PPSupplyMono-Variable.woff2")
+    format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* All styles are prefixed with #rankings to avoid conflicts */
+#rankings {
+  font-family: "PP Supply Mono", monospace;
+  color: rgb(250, 225, 250);
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+  z-index: 10;
+}
+
+#rankings::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 2px,
+    #ffffff0d 4px
+  );
+  background-size: auto 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+#rankings .portfolio-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-color); /* Use main site bg */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.3;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+#rankings .portfolio-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  padding: 0 2rem;
+  position: relative;
+  counter-reset: project-counter 0;
+}
+
+#rankings .project-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#rankings .project-item {
+  cursor: pointer;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 40px 1fr 2fr 1fr 1fr 80px;
+  grid-column-gap: 2rem;
+  padding: 12px 0;
+  align-items: center;
+  border-bottom: 1px solid rgba(200, 255, 200, 0.1);
+  transition: all 0.3s ease;
+  opacity: 1;
+  position: relative;
+}
+
+#rankings .project-item.active {
+  opacity: 1;
+  box-shadow: inset 0 1px 0 rgba(200, 255, 200, 0.2),
+    inset 0 -1px 0 rgba(200, 255, 200, 0.2);
+}
+
+#rankings .portfolio-container.has-active .project-item {
+  opacity: 0.3;
+}
+
+#rankings .portfolio-container.has-active .project-item.active {
+  opacity: 1;
+}
+
+#rankings .project-item::before {
+  content: counter(project-counter, decimal-leading-zero);
+  counter-increment: project-counter;
+  padding: 4px 0;
+  line-height: 0.8;
+  opacity: 0.6;
+  justify-self: start;
+  z-index: 10;
+  position: relative;
+  transition: opacity 0.1s ease;
+}
+
+#rankings .project-item.counter-hidden::before {
+  opacity: 0.05;
+}
+
+#rankings .project-data {
+  font-family: "PP Supply Mono", monospace;
+  position: relative;
+  white-space: nowrap;
+  text-decoration: none;
+  color: rgb(250, 225, 250);
+  z-index: 1;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+  padding: 2px;
+}
+
+#rankings .project-data.artist {
+  justify-self: start;
+}
+#rankings .project-data.album {
+  justify-self: start;
+}
+#rankings .project-data.category {
+  justify-self: start;
+}
+#rankings .project-data.label {
+  justify-self: start;
+}
+#rankings .project-data.year {
+  justify-self: end;
+  text-align: right;
+}
+
+#rankings .project-data::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -8px;
+  width: calc(100% + 16px);
+  height: calc(100% - 2px);
+  background: rgb(255, 223, 0); /* Accent color */
+  transition: transform 0.3s ease;
+  transform: scaleX(0);
+  transform-origin: left;
+  z-index: -1;
+}
+
+#rankings .project-item:hover .project-data::after {
+  transform: scaleX(1);
+}
+
+#rankings .project-item:hover .project-data {
+  color: rgb(10, 10, 10) !important;
+}
+
+/* This is the hover-reveal image, now positioned correctly */
+#rankings .background-image {
+  position: absolute; /* NOT fixed */
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 450px;
+  transform: translate(-50%, -50%) scale(1);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 0.6s ease,
+    transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: -2; /* It's behind the list text, but inside #rankings */
+  border-radius: 10px;
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+  #rankings .project-item {
+    grid-template-columns: 30px 1fr 1.5fr 0.8fr 0.8fr 60px;
+    grid-column-gap: 1rem;
+  }
+  #rankings .background-image {
+    width: 500px;
+    height: 375px;
+  }
+}
+
+@media (max-width: 768px) {
+  #rankings .portfolio-container {
+    padding: 0 1rem;
+  }
+
+  #rankings .project-item {
+    grid-template-columns: 30px 1fr 1fr;
+    grid-column-gap: 1rem;
+  }
+
+  #rankings .project-data:not(.artist):not(.album) {
+    display: none;
+  }
+
+  #rankings .background-image {
+    display: none; /* Hide image on mobile */
+  }
+}

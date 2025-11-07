@@ -121,7 +121,7 @@ $(document).ready(function() {
         animate();
 
     // --- Section Navigation ---
-    const sections = ['#home', '#about', '#services', '#portfolio', '#contact'];
+    const sections = ['#home', '#about', '#services', '#portfolio', '#contact', '#rankings'];
     let touchStartY = 0;
     let touchEndY = 0;
     let isThrottled = false; 
