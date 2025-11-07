@@ -1,297 +1,918 @@
-$(document).ready(function() {
+// TODO: Fix mobile/touch optimization for better experience on touch devices
+// TODO: Interactive area was removed due to issues with the middle title element and overall elements overlaping and causing sequence cancellation
+// TODO: Fix issue where the text is not returning to initial position when quickly hovering
 
-    // --- Section Navigation ---
-    const sections = ['#home', '#about', '#services', '#portfolio', '#contact'];
-    let touchStartY = 0;
-    let touchEndY = 0;
-    // --- FIX: Added missing variable declarations ---
-    let isThrottled = false; 
-    let currentSectionIndex = 0;
-    // --- END FIX ---
+gsap.registerPlugin(CustomEase, SplitText, ScrambleTextPlugin);
 
-    // --- Preloader (UPDATED with Fail-safe) ---
-    let preloaderFaded = false;
-    function hidePreloader() {
-        if (!preloaderFaded) {
-            preloaderFaded = true;
-            $('#preloader').fadeOut(500);
-        }
+document.addEventListener("DOMContentLoaded", function () {
+  CustomEase.create("customEase", "0.86, 0, 0.07, 1");
+  CustomEase.create("mouseEase", "0.25, 0.1, 0.25, 1");
+
+  document.fonts.ready.then(() => {
+    initializeAnimation();
+  });
+
+  function initializeAnimation() {
+    const backgroundTextItems = document.querySelectorAll(".text-item");
+    const backgroundImages = {
+      default: document.getElementById("default-bg"),
+      focus: document.getElementById("focus-bg"),
+      presence: document.getElementById("presence-bg"),
+      feel: document.getElementById("feel-bg")
+    };
+
+    function switchBackgroundImage(id) {
+      Object.values(backgroundImages).forEach((bg) => {
+        gsap.to(bg, {
+          opacity: 0,
+          duration: 0.8,
+          ease: "customEase"
+        });
+      });
+
+      if (backgroundImages[id]) {
+        gsap.to(backgroundImages[id], {
+          opacity: 1,
+          duration: 0.8,
+          ease: "customEase",
+          delay: 0.2
+        });
+      } else {
+        gsap.to(backgroundImages.default, {
+          opacity: 1,
+          duration: 0.8,
+          ease: "customEase",
+          delay: 0.2
+        });
+      }
     }
 
-    // 1. Hide on load (ideal case)
-    $(window).on('load', function() {
-        hidePreloader();
+    const alternativeTexts = {
+      focus: {
+        BE: "BECOME",
+        PRESENT: "MINDFUL",
+        LISTEN: "HEAR",
+        DEEPLY: "INTENTLY",
+        OBSERVE: "NOTICE",
+        "&": "+",
+        FEEL: "SENSE",
+        MAKE: "CREATE",
+        BETTER: "IMPROVED",
+        DECISIONS: "CHOICES",
+        THE: "YOUR",
+        CREATIVE: "ARTISTIC",
+        PROCESS: "JOURNEY",
+        IS: "FEELS",
+        MYSTERIOUS: "MAGICAL",
+        S: "START",
+        I: "INSPIRE",
+        M: "MAKE",
+        P: "PURE",
+        L: "LIGHT",
+        C: "CREATE",
+        T: "TRANSFORM",
+        Y: "YOURS",
+        "IS THE KEY": "UNLOCKS ALL",
+        "FIND YOUR VOICE": "SPEAK YOUR TRUTH",
+        "TRUST INTUITION": "FOLLOW INSTINCT",
+        "EMBRACE SILENCE": "WELCOME STILLNESS",
+        "QUESTION EVERYTHING": "CHALLENGE NORMS",
+        TRUTH: "HONESTY",
+        WISDOM: "INSIGHT",
+        FOCUS: "CONCENTRATE",
+        ATTENTION: "AWARENESS",
+        AWARENESS: "CONSCIOUSNESS",
+        PRESENCE: "BEING",
+        SIMPLIFY: "MINIMIZE",
+        REFINE: "PERFECT"
+      },
+      presence: {
+        BE: "EVOLVE",
+        PRESENT: "ENGAGED",
+        LISTEN: "ABSORB",
+        DEEPLY: "FULLY",
+        OBSERVE: "ANALYZE",
+        "&": "→",
+        FEEL: "EXPERIENCE",
+        MAKE: "BUILD",
+        BETTER: "STRONGER",
+        DECISIONS: "SYSTEMS",
+        THE: "EACH",
+        CREATIVE: "ITERATIVE",
+        PROCESS: "METHOD",
+        IS: "BECOMES",
+        MYSTERIOUS: "REVEALING",
+        S: "STRUCTURE",
+        I: "ITERATE",
+        M: "METHOD",
+        P: "PRACTICE",
+        L: "LEARN",
+        C: "CONSTRUCT",
+        T: "TECHNIQUE",
+        Y: "YIELD",
+        "IS THE KEY": "DRIVES SUCCESS",
+        "FIND YOUR VOICE": "DEVELOP YOUR STYLE",
+        "TRUST INTUITION": "FOLLOW THE FLOW",
+        "EMBRACE SILENCE": "VALUE PAUSES",
+        "QUESTION EVERYTHING": "EXAMINE DETAILS",
+        TRUTH: "CLARITY",
+        WISDOM: "KNOWLEDGE",
+        FOCUS: "DIRECTION",
+        ATTENTION: "PRECISION",
+        AWARENESS: "UNDERSTANDING",
+        PRESENCE: "ENGAGEMENT",
+        SIMPLIFY: "STREAMLINE",
+        REFINE: "OPTIMIZE"
+      },
+      feel: {
+        BE: "SEE",
+        PRESENT: "FOCUSED",
+        LISTEN: "UNDERSTAND",
+        DEEPLY: "CLEARLY",
+        OBSERVE: "PERCEIVE",
+        "&": "=",
+        FEEL: "KNOW",
+        MAKE: "ACHIEVE",
+        BETTER: "CLEARER",
+        DECISIONS: "VISION",
+        THE: "THIS",
+        CREATIVE: "INSIGHTFUL",
+        PROCESS: "THINKING",
+        IS: "BRINGS",
+        MYSTERIOUS: "ILLUMINATING",
+        S: "SHARP",
+        I: "INSIGHT",
+        M: "MINDFUL",
+        P: "PRECISE",
+        L: "LUCID",
+        C: "CLEAR",
+        T: "TRANSPARENT",
+        Y: "YES",
+        "IS THE KEY": "REVEALS TRUTH",
+        "FIND YOUR VOICE": "DISCOVER YOUR VISION",
+        "TRUST INTUITION": "BELIEVE YOUR EYES",
+        "EMBRACE SILENCE": "SEEK STILLNESS",
+        "QUESTION EVERYTHING": "CLARIFY ASSUMPTIONS",
+        TRUTH: "REALITY",
+        WISDOM: "PERCEPTION",
+        FOCUS: "CLARITY",
+        ATTENTION: "OBSERVATION",
+        AWARENESS: "RECOGNITION",
+        PRESENCE: "ALERTNESS",
+        SIMPLIFY: "DISTILL",
+        REFINE: "SHARPEN"
+      }
+    };
 
-        // --- FIX: Moved Animated Headline Logic to window.load ---
-        // This ensures fonts are loaded and height calculation is correct
-        (function() {
-            const animationDelay = 2500;
-            const $wordsWrapper = $('.animated-headline .words-wrapper');
-            const $words = $wordsWrapper.find('b');
-            
-            // Check if there are words to animate
-            if ($words.length > 1) {
-                // --- FIX: Use outerHeight(true) to include margins if any ---
-                const wordHeight = $words.eq(0).outerHeight(); 
-                let currentIndex = 0;
+    backgroundTextItems.forEach((item) => {
+      item.dataset.originalText = item.textContent;
+      item.dataset.text = item.textContent;
 
-                // Clone first word and append it to the end for a seamless loop
-                $words.eq(0).clone().appendTo($wordsWrapper);
+      // Make background text fully opaque by default
+      gsap.set(item, { opacity: 1 });
+    });
 
-                function animateWords() {
-                    currentIndex++;
-                    const newTransform = `translateY(-${currentIndex * wordHeight}px)`;
-                    
-                    $wordsWrapper.css('transition', 'transform 0.5s ease-in-out');
-                    $wordsWrapper.css('transform', newTransform);
+    const typeLines = document.querySelectorAll(".type-line");
+    typeLines.forEach((line, index) => {
+      if (index % 2 === 0) {
+        line.classList.add("odd");
+      } else {
+        line.classList.add("even");
+      }
+    });
 
-                    // Check if we're at the cloned word
-                    if (currentIndex === $words.length) {
-                        setTimeout(() => {
-                            // Reset to the beginning without an animation
-                            $wordsWrapper.css('transition', 'none');
-                            $wordsWrapper.css('transform', 'translateY(0)');
-                            currentIndex = 0; // Reset index
-                        }, 500); // Must match CSS transition duration
-                    }
-                }
+    const oddLines = document.querySelectorAll(".type-line.odd");
+    const evenLines = document.querySelectorAll(".type-line.even");
+    const TYPE_LINE_OPACITY = 0.015;
 
-                setInterval(animateWords, animationDelay);
+    const state = {
+      activeRowId: null,
+      kineticAnimationActive: false,
+      activeKineticAnimation: null,
+      textRevealAnimation: null,
+      transitionInProgress: false // New state to track transitions
+    };
+
+    const textRows = document.querySelectorAll(".text-row");
+    const splitTexts = {};
+
+    textRows.forEach((row, index) => {
+      const textElement = row.querySelector(".text-content");
+      const text = textElement.dataset.text;
+      const rowId = row.dataset.rowId;
+
+      splitTexts[rowId] = new SplitText(textElement, {
+        type: "chars",
+        charsClass: "char",
+        mask: true,
+        reduceWhiteSpace: false,
+        propIndex: true
+      });
+
+      textElement.style.visibility = "visible";
+    });
+
+    function updateCharacterWidths() {
+      const isMobile = window.innerWidth < 1024;
+
+      textRows.forEach((row, index) => {
+        const rowId = row.dataset.rowId;
+        const textElement = row.querySelector(".text-content");
+        const computedStyle = window.getComputedStyle(textElement);
+        const currentFontSize = computedStyle.fontSize;
+        const chars = splitTexts[rowId].chars;
+
+        chars.forEach((char, i) => {
+          const charText =
+            char.textContent ||
+            (char.querySelector(".char-inner")
+              ? char.querySelector(".char-inner").textContent
+              : "");
+          if (!charText && i === 0) return;
+
+          let charWidth;
+
+          if (isMobile) {
+            const fontSizeValue = parseFloat(currentFontSize);
+            const standardCharWidth = fontSizeValue * 0.6;
+            charWidth = standardCharWidth;
+
+            if (!char.querySelector(".char-inner") && charText) {
+              char.textContent = "";
+              const innerSpan = document.createElement("span");
+              innerSpan.className = "char-inner";
+              innerSpan.textContent = charText;
+              char.appendChild(innerSpan);
+              innerSpan.style.transform = "translate3d(0, 0, 0)";
             }
-        })();
-        // --- END FIX ---
-    });
 
-    // 2. Fail-safe: Hide after 3 seconds anyway
-    setTimeout(hidePreloader, 3000);
-    // --- END PRELOADER UPDATE ---
+            char.style.width = `${charWidth}px`;
+            char.style.maxWidth = `${charWidth}px`;
+            char.dataset.charWidth = charWidth;
+            char.dataset.hoverWidth = charWidth;
+          } else {
+            const tempSpan = document.createElement("span");
+            tempSpan.style.position = "absolute";
+            tempSpan.style.visibility = "hidden";
+            tempSpan.style.fontSize = currentFontSize;
+            tempSpan.style.fontFamily = "Longsile, sans-serif";
+            tempSpan.textContent = charText;
+            document.body.appendChild(tempSpan);
 
-    // --- Menu Toggle ---
-    const $menuBtn = $('.menu-btn');
-    const $navOverlay = $('.nav-overlay');
-    const $closeBtn = $('.close-btn'); // --- FIX: Get close button ---
-    
-    $menuBtn.on('click', function() {
-        // $menuBtn.toggleClass('open'); // --- OPTIMIZATION: Removed unused class toggle ---
-        $navOverlay.toggleClass('open');
+            const actualWidth = tempSpan.offsetWidth;
+            document.body.removeChild(tempSpan);
 
-        // --- NEW: Focus management ---
-        if ($navOverlay.hasClass('open')) {
-            // Set focus to first link after transition
-            setTimeout(() => {
-                $navOverlay.find('ul li a').first().focus();
-            }, 700); // Match CSS transition duration
-        }
-        // --- END NEW ---
-    });
-    
-    // --- FIX: Close button click handler ---
-    $closeBtn.on('click', function() {
-        $navOverlay.removeClass('open');
-        $menuBtn.focus(); // --- NEW: Return focus
-    });
-    // --- END FIX ---
-    
-    // --- Navigation Logic ---
-    $('.nav-link').on('click', function(e) {
-        e.preventDefault();
-        const targetId = $(this).attr('href');
-        
-        // Set active section
-        $('.section').removeClass('active');
-        $(targetId).addClass('active');
-        
-        // Update URL hash
-        window.location.hash = targetId;
-        
-        // Update current section index
-        currentSectionIndex = sections.indexOf(targetId);
+            const fontSizeValue = parseFloat(currentFontSize);
+            const fontSizeRatio = fontSizeValue / 160;
+            const padding = 10 * fontSizeRatio;
 
-        // --- NEW: Hide/Show Scroll Indicator ---
-        if (currentSectionIndex === 0) {
-            $('.scroll-indicator').fadeIn(300);
-        } else {
-            $('.scroll-indicator').fadeOut(300);
-        }
-        // --- END NEW ---
+            charWidth = Math.max(actualWidth + padding, 30 * fontSizeRatio);
 
-        // Close menu
-        // $menuBtn.removeClass('open'); // --- OPTIMIZATION: Removed unused class ---
-        $navOverlay.removeClass('open');
-        $menuBtn.focus(); // --- NEW: Return focus
-    });
-    
-    // --- Check for Hash on Load ---
-    const currentHash = window.location.hash;
-    if (currentHash && $(currentHash).length) {
-        $('.section').removeClass('active');
-        $(currentHash).addClass('active');
-        currentSectionIndex = sections.indexOf(currentHash); // Set index
-    } else {
-        // Default to home if no hash
-        $('#home').addClass('active');
-        currentSectionIndex = 0; // Set index
+            if (!char.querySelector(".char-inner") && charText) {
+              char.textContent = "";
+              const innerSpan = document.createElement("span");
+              innerSpan.className = "char-inner";
+              innerSpan.textContent = charText;
+              char.appendChild(innerSpan);
+              innerSpan.style.transform = "translate3d(0, 0, 0)";
+            }
+
+            char.style.width = `${charWidth}px`;
+            char.style.maxWidth = `${charWidth}px`;
+            char.dataset.charWidth = charWidth;
+
+            const hoverWidth = Math.max(charWidth * 1.8, 85 * fontSizeRatio);
+            char.dataset.hoverWidth = hoverWidth;
+          }
+
+          char.style.setProperty("--char-index", i);
+        });
+      });
     }
 
-    // --- NEW: Set initial scroll indicator state ---
-    if (currentSectionIndex === 0) {
-        $('.scroll-indicator').show();
-    } else {
-        $('.scroll-indicator').hide();
+    updateCharacterWidths();
+
+    window.addEventListener("resize", function () {
+      clearTimeout(window.resizeTimer);
+      window.resizeTimer = setTimeout(function () {
+        updateCharacterWidths();
+      }, 250);
+    });
+
+    textRows.forEach((row, rowIndex) => {
+      const rowId = row.dataset.rowId;
+      const chars = splitTexts[rowId].chars;
+
+      gsap.set(chars, {
+        opacity: 0,
+        filter: "blur(15px)"
+      });
+
+      gsap.to(chars, {
+        opacity: 1,
+        filter: "blur(0px)",
+        duration: 0.8,
+        stagger: 0.09,
+        ease: "customEase",
+        delay: 0.15 * rowIndex
+      });
+    });
+
+    function forceResetKineticAnimation() {
+      if (state.activeKineticAnimation) {
+        state.activeKineticAnimation.kill();
+        state.activeKineticAnimation = null;
+      }
+
+      const kineticType = document.getElementById("kinetic-type");
+      gsap.killTweensOf([kineticType, typeLines, oddLines, evenLines]);
+
+      // FIXED: Always ensure kinetic type is visible and properly set up
+      gsap.set(kineticType, {
+        display: "grid",
+        scale: 1,
+        rotation: 0,
+        opacity: 1,
+        visibility: "visible" // Added visibility property
+      });
+
+      gsap.set(typeLines, {
+        opacity: TYPE_LINE_OPACITY,
+        x: "0%"
+      });
+
+      state.kineticAnimationActive = false;
     }
-    // --- END NEW ---
 
-    // --- Mouse Wheel "Scroll" Navigation ---
-    $(window).on('wheel', function(e) {
-        if (isThrottled) return;
-        // --- FIX: Prevent scrolling if menu is open ---
-        if ($navOverlay.hasClass('open')) return;
-        // --- END FIX ---
+    function startKineticAnimation(text) {
+      // First ensure any existing animation is properly cleaned up
+      forceResetKineticAnimation();
 
-        isThrottled = true;
-        
-        const delta = e.originalEvent.deltaY;
-        
-        if (delta > 0) {
-            currentSectionIndex++;
-        } else {
-            currentSectionIndex--;
+      const kineticType = document.getElementById("kinetic-type");
+
+      // FIXED: Explicitly ensure the element is visible with inline styles
+      kineticType.style.display = "grid";
+      kineticType.style.opacity = "1";
+      kineticType.style.visibility = "visible";
+
+      const repeatedText = `${text} ${text} ${text}`;
+
+      typeLines.forEach((line) => {
+        line.textContent = repeatedText;
+      });
+
+      // FIXED: Add a small delay before starting animation to ensure element is visible
+      setTimeout(() => {
+        const timeline = gsap.timeline({
+          onComplete: () => {
+            state.kineticAnimationActive = false;
+          }
+        });
+
+        timeline.to(kineticType, {
+          duration: 1.4,
+          ease: "customEase",
+          scale: 2.7,
+          rotation: -90
+        });
+
+        timeline.to(
+          oddLines,
+          {
+            keyframes: [
+              { x: "20%", duration: 1, ease: "customEase" },
+              { x: "-200%", duration: 1.5, ease: "customEase" }
+            ],
+            stagger: 0.08
+          },
+          0
+        );
+
+        timeline.to(
+          evenLines,
+          {
+            keyframes: [
+              { x: "-20%", duration: 1, ease: "customEase" },
+              { x: "200%", duration: 1.5, ease: "customEase" }
+            ],
+            stagger: 0.08
+          },
+          0
+        );
+
+        timeline.to(
+          typeLines,
+          {
+            keyframes: [
+              { opacity: 1, duration: 1, ease: "customEase" },
+              { opacity: 0, duration: 1.5, ease: "customEase" }
+            ],
+            stagger: 0.05
+          },
+          0
+        );
+
+        state.kineticAnimationActive = true;
+        state.activeKineticAnimation = timeline;
+      }, 20); // Small delay to ensure DOM updates
+    }
+
+    function fadeOutKineticAnimation() {
+      if (!state.kineticAnimationActive) return;
+
+      if (state.activeKineticAnimation) {
+        state.activeKineticAnimation.kill();
+        state.activeKineticAnimation = null;
+      }
+
+      const kineticType = document.getElementById("kinetic-type");
+
+      // FIXED: Don't set display to none on fadeout completion
+      const fadeOutTimeline = gsap.timeline({
+        onComplete: () => {
+          gsap.set(kineticType, {
+            scale: 1,
+            rotation: 0,
+            opacity: 1
+            // Removed setting display: none
+          });
+
+          gsap.set(typeLines, {
+            opacity: TYPE_LINE_OPACITY,
+            x: "0%"
+          });
+
+          state.kineticAnimationActive = false;
         }
-        
-        currentSectionIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex));
-        
-        const targetId = sections[currentSectionIndex];
-        $('.section').removeClass('active');
-        $(targetId).addClass('active');
-        window.location.hash = targetId;
-        
-        // --- NEW: Hide/Show Scroll Indicator ---
-        if (currentSectionIndex === 0) {
-            $('.scroll-indicator').fadeIn(300);
-        } else {
-            $('.scroll-indicator').fadeOut(300);
-        }
-        // --- END NEW ---
+      });
 
+      fadeOutTimeline.to(kineticType, {
+        opacity: 0,
+        scale: 0.8,
+        duration: 0.5,
+        ease: "customEase"
+      });
+    }
+
+    // FIXED: New function to handle transitions between rows
+    function transitionBetweenRows(fromRow, toRow) {
+      if (state.transitionInProgress) return;
+
+      state.transitionInProgress = true;
+
+      const fromRowId = fromRow.dataset.rowId;
+      const toRowId = toRow.dataset.rowId;
+
+      // 1. Clean up the previous row
+      fromRow.classList.remove("active");
+      const fromChars = splitTexts[fromRowId].chars;
+      const fromInners = fromRow.querySelectorAll(".char-inner");
+
+      gsap.killTweensOf(fromChars);
+      gsap.killTweensOf(fromInners);
+
+      // 2. Update state and prepare new row
+      toRow.classList.add("active");
+      state.activeRowId = toRowId;
+
+      const toText = toRow.querySelector(".text-content").dataset.text;
+      const toChars = splitTexts[toRowId].chars;
+      const toInners = toRow.querySelectorAll(".char-inner");
+
+      // 3. Force reset kinetic animation (don't fade out, just reset)
+      forceResetKineticAnimation();
+
+      // 4. Update background
+      switchBackgroundImage(toRowId);
+
+      // 5. Start new animations
+      startKineticAnimation(toText);
+
+      if (state.textRevealAnimation) {
+        state.textRevealAnimation.kill();
+      }
+      state.textRevealAnimation = createTextRevealAnimation(toRowId);
+
+      // 6. Reset the previous row instantly
+      gsap.set(fromChars, {
+        maxWidth: (i, target) => parseFloat(target.dataset.charWidth)
+      });
+
+      gsap.set(fromInners, {
+        x: 0
+      });
+
+      // 7. Animate the new row
+      const timeline = gsap.timeline({
+        onComplete: () => {
+          state.transitionInProgress = false;
+        }
+      });
+
+      timeline.to(
+        toChars,
+        {
+          maxWidth: (i, target) => parseFloat(target.dataset.hoverWidth),
+          duration: 0.64,
+          stagger: 0.04,
+          ease: "customEase"
+        },
+        0
+      );
+
+      timeline.to(
+        toInners,
+        {
+          x: -35,
+          duration: 0.64,
+          stagger: 0.04,
+          ease: "customEase"
+        },
+        0.05
+      );
+    }
+
+    function createTextRevealAnimation(rowId) {
+      const timeline = gsap.timeline();
+
+      // Fade out other background text items
+      timeline.to(backgroundTextItems, {
+        opacity: 0.3,
+        duration: 0.5,
+        ease: "customEase"
+      });
+
+      timeline.call(() => {
+        backgroundTextItems.forEach((item) => {
+          item.classList.add("highlight");
+        });
+      });
+
+      timeline.call(
+        () => {
+          backgroundTextItems.forEach((item) => {
+            const originalText = item.dataset.text;
+            if (
+              alternativeTexts[rowId] &&
+              alternativeTexts[rowId][originalText]
+            ) {
+              item.textContent = alternativeTexts[rowId][originalText];
+            }
+          });
+        },
+        null,
+        "+=0.5"
+      );
+
+      timeline.call(() => {
+        backgroundTextItems.forEach((item) => {
+          item.classList.remove("highlight");
+          item.classList.add("highlight-reverse");
+        });
+      });
+
+      timeline.call(
+        () => {
+          backgroundTextItems.forEach((item) => {
+            item.classList.remove("highlight-reverse");
+          });
+        },
+        null,
+        "+=0.5"
+      );
+
+      return timeline;
+    }
+
+    function resetBackgroundTextWithAnimation() {
+      const timeline = gsap.timeline();
+
+      timeline.call(() => {
+        backgroundTextItems.forEach((item) => {
+          item.classList.add("highlight");
+        });
+      });
+
+      timeline.call(
+        () => {
+          backgroundTextItems.forEach((item) => {
+            item.textContent = item.dataset.originalText;
+          });
+        },
+        null,
+        "+=0.5"
+      );
+
+      timeline.call(() => {
+        backgroundTextItems.forEach((item) => {
+          item.classList.remove("highlight");
+          item.classList.add("highlight-reverse");
+        });
+      });
+
+      timeline.call(
+        () => {
+          backgroundTextItems.forEach((item) => {
+            item.classList.remove("highlight-reverse");
+          });
+        },
+        null,
+        "+=0.5"
+      );
+
+      // Restore full opacity to all background text items
+      timeline.to(backgroundTextItems, {
+        opacity: 1,
+        duration: 0.5,
+        ease: "customEase"
+      });
+
+      return timeline;
+    }
+
+    // FIXED: Modified activateRow function to use the transition function
+    function activateRow(row) {
+      const rowId = row.dataset.rowId;
+
+      // If already active, do nothing
+      if (state.activeRowId === rowId) return;
+
+      // If a transition is already in progress, don't start another one
+      if (state.transitionInProgress) return;
+
+      // Check if there's already an active row
+      const activeRow = document.querySelector(".text-row.active");
+
+      if (activeRow) {
+        // Use the transition function to switch between rows
+        transitionBetweenRows(activeRow, row);
+      } else {
+        // No active row, just activate this one normally
+        row.classList.add("active");
+        state.activeRowId = rowId;
+
+        const text = row.querySelector(".text-content").dataset.text;
+        const chars = splitTexts[rowId].chars;
+        const innerSpans = row.querySelectorAll(".char-inner");
+
+        switchBackgroundImage(rowId);
+        startKineticAnimation(text);
+
+        if (state.textRevealAnimation) {
+          state.textRevealAnimation.kill();
+        }
+        state.textRevealAnimation = createTextRevealAnimation(rowId);
+
+        // Simplified animation without mouse move effects
+        const timeline = gsap.timeline();
+
+        timeline.to(
+          chars,
+          {
+            maxWidth: (i, target) => parseFloat(target.dataset.hoverWidth),
+            duration: 0.64,
+            stagger: 0.04,
+            ease: "customEase"
+          },
+          0
+        );
+
+        timeline.to(
+          innerSpans,
+          {
+            x: -35,
+            duration: 0.64,
+            stagger: 0.04,
+            ease: "customEase"
+          },
+          0.05
+        );
+      }
+    }
+
+    function deactivateRow(row) {
+      const rowId = row.dataset.rowId;
+
+      if (state.activeRowId !== rowId) return;
+
+      // If a transition is already in progress, don't interfere
+      if (state.transitionInProgress) return;
+
+      state.activeRowId = null;
+      row.classList.remove("active");
+
+      switchBackgroundImage("default");
+      fadeOutKineticAnimation();
+
+      if (state.textRevealAnimation) {
+        state.textRevealAnimation.kill();
+      }
+      state.textRevealAnimation = resetBackgroundTextWithAnimation();
+
+      const chars = splitTexts[rowId].chars;
+      const innerSpans = row.querySelectorAll(".char-inner");
+
+      const timeline = gsap.timeline();
+
+      timeline.to(
+        innerSpans,
+        {
+          x: 0,
+          duration: 0.64,
+          stagger: 0.03,
+          ease: "customEase"
+        },
+        0
+      );
+
+      timeline.to(
+        chars,
+        {
+          maxWidth: (i, target) => parseFloat(target.dataset.charWidth),
+          duration: 0.64,
+          stagger: 0.03,
+          ease: "customEase"
+        },
+        0.05
+      );
+    }
+
+    function initializeParallax() {
+      const container = document.querySelector("body");
+      const backgroundElements = [
+        ...document.querySelectorAll("[id$='-bg']"),
+        ...document.querySelectorAll(".bg-text-container")
+      ];
+
+      const parallaxLayers = [0.02, 0.03, 0.04, 0.05];
+      backgroundElements.forEach((el, index) => {
+        el.dataset.parallaxSpeed =
+          parallaxLayers[index % parallaxLayers.length];
+
+        gsap.set(el, {
+          transformOrigin: "center center",
+          force3D: true
+        });
+      });
+
+      let lastParallaxTime = 0;
+      const throttleParallax = 20;
+
+      container.addEventListener("mousemove", (e) => {
+        const now = Date.now();
+        if (now - lastParallaxTime < throttleParallax) return;
+        lastParallaxTime = now;
+
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const offsetX = (e.clientX - centerX) / centerX;
+        const offsetY = (e.clientY - centerY) / centerY;
+
+        backgroundElements.forEach((el) => {
+          const speed = parseFloat(el.dataset.parallaxSpeed);
+
+          if (el.id && el.id.endsWith("-bg") && el.style.opacity === "0") {
+            return;
+          }
+
+          const moveX = offsetX * 100 * speed;
+          const moveY = offsetY * 50 * speed;
+
+          gsap.to(el, {
+            x: moveX,
+            y: moveY,
+            duration: 1.0,
+            ease: "mouseEase",
+            overwrite: "auto"
+          });
+        });
+      });
+
+      container.addEventListener("mouseleave", () => {
+        backgroundElements.forEach((el) => {
+          gsap.to(el, {
+            x: 0,
+            y: 0,
+            duration: 1.5,
+            ease: "customEase"
+          });
+        });
+      });
+
+      backgroundElements.forEach((el, index) => {
+        const delay = index * 0.2;
+        const floatAmount = 5 + (index % 3) * 2;
+
+        gsap.to(el, {
+          y: `+=${floatAmount}`,
+          duration: 3 + (index % 2),
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          delay: delay
+        });
+      });
+    }
+
+    // Keep the event listeners but remove the mouse move functionality
+    textRows.forEach((row) => {
+      const interactiveArea = row.querySelector(".interactive-area");
+
+      interactiveArea.addEventListener("mouseenter", () => {
+        activateRow(row);
+      });
+
+      interactiveArea.addEventListener("mouseleave", () => {
+        if (state.activeRowId === row.dataset.rowId) {
+          deactivateRow(row);
+        }
+      });
+
+      // Add click event as a backup for mouseenter
+      row.addEventListener("click", () => {
+        activateRow(row);
+      });
+    });
+
+    // Add a global function to manually test the animation
+    window.testKineticAnimation = function (rowId) {
+      const row = document.querySelector(`.text-row[data-row-id="${rowId}"]`);
+      if (row) {
+        activateRow(row);
         setTimeout(() => {
-            isThrottled = false;
-        }, 750); // --- FIX: Faster scroll throttle (550ms) ---
-    });
+          deactivateRow(row);
+        }, 3000);
+      }
+    };
 
-    // --- FIX: Touch Swipe Navigation for Mobile ---
-    $(window).on('touchstart', function(e) {
-        if ($navOverlay.hasClass('open')) return;
-        touchStartY = e.originalEvent.touches[0].clientY;
-    });
+    function scrambleRandomText() {
+      const randomIndex = Math.floor(
+        Math.random() * backgroundTextItems.length
+      );
+      const randomItem = backgroundTextItems[randomIndex];
+      const originalText = randomItem.dataset.text;
 
-    $(window).on('touchend', function(e) {
-        if ($navOverlay.hasClass('open')) return;
-        touchEndY = e.originalEvent.changedTouches[0].clientY;
-        handleSwipe();
-    });
+      gsap.to(randomItem, {
+        duration: 1,
+        scrambleText: {
+          text: originalText,
+          chars: "■▪▌▐▬",
+          revealDelay: 0.5,
+          speed: 0.3
+        },
+        ease: "none"
+      });
 
-    function handleSwipe() {
-        if (isThrottled) return;
-
-        // Check for significant swipe
-        if (Math.abs(touchStartY - touchEndY) > 50) { // 50px threshold
-            isThrottled = true;
-
-            if (touchStartY > touchEndY) {
-                // Swiped Up
-                currentSectionIndex++;
-            } else {
-                // Swiped Down
-                currentSectionIndex--;
-            }
-
-            // Clamp index
-            currentSectionIndex = Math.max(0, Math.min(sections.length - 1, currentSectionIndex));
-            
-            // Navigate
-            const targetId = sections[currentSectionIndex];
-            $('.section').removeClass('active');
-            $(targetId).addClass('active');
-            window.location.hash = targetId;
-            
-            // --- NEW: Hide/Show Scroll Indicator ---
-            if (currentSectionIndex === 0) {
-                $('.scroll-indicator').fadeIn(300);
-            } else {
-                $('.scroll-indicator').fadeOut(300);
-            }
-            // --- END NEW ---
-
-            // Reset throttle
-            setTimeout(() => {
-                isThrottled = false;
-            }, 550); // --- FIX: Faster scroll throttle (550ms) ---
-        }
-    }
-    // --- END FIX ---
-
-
-    // --- FIX: Re-engineered Animated Headline Logic (Ticker) ---
-    /* --- MOVED TO $(window).on('load', ...) --- */
-    // --- END FIX ---
-
-
-    // Only run this for non-touch devices
-    let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (!isTouchDevice) {
-        const $bg = $('#interactive-bg');
-        let frame;
-
-        $(window).on('mousemove', (e) => {
-            if (frame) {
-                cancelAnimationFrame(frame);
-            }
-            frame = requestAnimationFrame(() => {
-                const { clientX, clientY } = e;
-                const x = Math.round((clientX / window.innerWidth) * 100);
-                const y = Math.round((clientY / window.innerHeight) * 100);
-                
-                // --- FIX: Brighter, colored gradient "spotlight" ---
-                /* --- MODIFIED: Shrunk radius for a smaller hover area --- */
-                $bg.css('background', `radial-gradient(circle at ${x}% ${y}%,rgba(61, 25, 140, 0.18) 0%, rgba(67, 53, 160, 0.21) 3%, transparent 10%)`);
-            });
-        });
-    } else {
-        // On touch devices, just remove the element
-        // --- CLARIFICATION ---
-        // NOTE: The radial gradient "light" effect is *only* for mouse movement.
-        // It is intentionally disabled on touch devices as there is no "mousemove" event.
-        // The ":active" styles in the CSS (which you can test by tapping & holding a button) 
-        // handle the "tap" feedback for buttons and links.
-        $('#interactive-bg').remove();
-    }
-    // --- END FIX ---
-
-
-    // --- Swiper.js Initialization (3D Carousel) ---
-    if ($('#portfolio-swiper').length) {
-        var swiper = new Swiper('#portfolio-swiper', {
-            effect: 'coverflow',
-            grabCursor: true,
-            centeredSlides: true,
-            slidesPerView: 'auto',
-            coverflowEffect: {
-                rotate: 45,
-                stretch: 0,
-                depth: 150,
-                modifier: 1,
-                slideShadows: true,
-            },
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-        });
+      const delay = 0.5 + Math.random() * 2;
+      setTimeout(scrambleRandomText, delay * 1000);
     }
 
+    setTimeout(scrambleRandomText, 1000);
+
+    const simplicity = document.querySelector(
+      '.text-item[data-text="IS THE KEY"]'
+    );
+    if (simplicity) {
+      const splitSimplicity = new SplitText(simplicity, {
+        type: "chars",
+        charsClass: "simplicity-char"
+      });
+
+      gsap.from(splitSimplicity.chars, {
+        opacity: 0,
+        scale: 0.5,
+        duration: 1,
+        stagger: 0.015,
+        ease: "customEase",
+        delay: 1
+      });
+    }
+
+    backgroundTextItems.forEach((item, index) => {
+      const delay = index * 0.1;
+      gsap.to(item, {
+        opacity: 0.85,
+        duration: 2 + (index % 3),
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: delay
+      });
+    });
+
+    initializeParallax();
+
+    // FIXED: Add stronger CSS rules to ensure kinetic type is visible
+    const style = document.createElement("style");
+    style.textContent = `
+      #kinetic-type {
+        z-index: 200 !important;
+        display: grid !important;
+        visibility: visible !important;
+        opacity: 1;
+        pointer-events: none;
+      }
+    `;
+    document.head.appendChild(style);
+  }
 });

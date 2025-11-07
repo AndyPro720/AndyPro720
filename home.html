@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Your Name - Digital Creator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="hstyle.css">
+</head>
+
+<body>
+    <canvas id="bgCanvas"></canvas>
+
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <div id="interactive-bg"></div>
+
+    <header class="header">
+        <a href="#home" class="logo nav-link">YourName</a>
+        <div class="menu-btn">MENU</div>
+    </header>
+
+    <nav class="nav-overlay">
+        <div class="close-btn">&times;</div>
+        <ul>
+            <li><a href="#home" class="nav-link">Home</a></li>
+            <li><a href="#about" class="nav-link">About</a></li>
+            <li><a href="#services" class="nav-link">Skills</a></li>
+            <li><a href="#portfolio" class="nav-link">Projects</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="social-links">
+        <a href="#">LinkedIn</a>
+        <a href="#">Instagram</a>
+        <a href="#">Behance</a>
+    </div>
+
+    <!-- UPDATED: Animated Scroll Indicator -->
+    <div class="scroll-indicator" aria-hidden="true">
+        <div class="scroll-arrow"></div>
+    </div>
+
+    <main class="main-content">
+
+        <section class="section active" id="home">
+            <div class="home-content">
+                <h1>
+                    <span class="static-headline">Hey, I'm Angaj!</span>
+                    <br>
+                    <span class="animated-headline">
+                        <span class="words-wrapper">
+                            <b class="is-visible">Digital Creator</b>
+                            <b>Web Developer</b>
+                            <b>UI/UX Designer</b>
+                        </span>
+                    </span>
+                </h1>
+            </div>
+        </section>
+
+        <section class="section" id="about">
+            <div class="section-container">
+                <h2 class="section-title">About Me</h2>
+                <p class="section-subtitle">A little bit about who I am and what I do.</p>
+
+                <div class="about-content">
+                    <div class="about-image">
+                        <img src="https://placehold.co/600x400/6a5acd/ffffff?text=Your+Photo" alt="Your Name"
+                            onerror="this.src='https://placehold.co/600x400/ef4444/ffffff?text=Image+Error';this.onerror=null;">
+                    </div>
+                    <div class="about-text">
+                        <h3>I'm Your Name, a passionate creator based in Your City.</h3>
+                        <p>
+                            I specialize in building beautiful, functional, and user-centric digital experiences.
+                            With over X years of experience, I've helped clients from all over the world
+                            bring their visions to life.
+                        </p>
+                        <p>
+                            Whether it's web design, content creation, or digital strategy, I'm dedicated to
+                            delivering high-quality work that gets results.
+                        </p>
+                        <a href="#contact" class="btn nav-link">Let's Talk</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="services">
+            <div class="section-container">
+                <h2 class="section-title">Skills</h2>
+                <p class="section-subtitle">My technical and creative arsenal.</p>
+
+                <div class="services-grid">
+                    <div class="service-item">
+                        <img src="https://placehold.co/110x110/111111/ffffff?text=W&font=poppins" alt="Word"
+                            title="Word">
+                    </div>
+                    <div class="service-item">
+                        <img src="https://placehold.co/110x110/111111/ffffff?text=Figma&font=poppins" alt="Figma"
+                            title="Figma">
+                    </div>
+                    <div class="service-item">
+                        <img src="https://placehold.co/110x110/111111/ffffff?text=Xd&font=poppins" alt="XD"
+                            title="Adobe XD">
+                    </div>
+                    <div class="service-item">
+                        <img src="https://placehold.co/110x110/111111/ffffff?text=Ai&font=poppins" alt="Illustrator"
+                            title="Adobe Illustrator">
+                    </div>
+                    <div class="service-item">
+                        <img src="https://placehold.co/110x110/111111/ffffff?text=Ps&font=poppins" alt="Photoshop"
+                            title="Adobe Photoshop">
+                    </div>
+                    <div class="service-item">
+                        <img src="https://placehold.co/110x110/111111/ffffff?text=Ae&font=poppins" alt="After Effects"
+                            title="Adobe After Effects">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="portfolio">
+            <div class="section-container">
+                <h2 class="section-title">Projects</h2>
+                <p class="section-subtitle">A selection of my recent work.</p>
+
+                <div class="swiper-container" id="portfolio-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+1" alt="Project 1"
+                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+2" alt="Project 2"
+                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+3" alt="Project 3"
+                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+4" alt="Project 4"
+                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+5" alt="Project 5"
+                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+6" alt="Project 6"
+                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="section" id="contact">
+            <div class="section-container">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">Have a project in mind? I'd love to hear from you.</p>
+
+                <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <input type="text" name="subject" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <textarea name="message" placeholder="Your Message" required></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <button type="submit" class="btn">Send Message</button>
+                    </div>
+                </form>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="hscript.js"></script>
+
+</body>
+
+</html>

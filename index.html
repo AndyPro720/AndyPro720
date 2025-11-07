@@ -4,205 +4,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Your Name - Digital Creator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.js"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <title>Angaj - Intro</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <div class="background-frame"></div>
+
+    <div class="background-image default" id="default-bg"></div>
+    <div class="background-image focus" id="focus-bg"></div>
+    <div class="background-image presence" id="presence-bg"></div>
+    <div class="background-image feel" id="feel-bg"></div>
+
+    <div class="bottom-gradient"></div>
+
+    <div class="text-background">
+        <div class="text-item" style="top: 5%; left: 8%;" data-text="BE">BE</div>
+        <div class="text-item" style="top: 5%; left: 15%;" data-text="PRESENT">PRESENT</div>
+        <div class="text-item" style="top: 5%; left: 28%;" data-text="LISTEN">LISTEN</div>
+        <div class="text-item" style="top: 5%; left: 42%;" data-text="DEEPLY">DEEPLY</div>
+        <div class="text-item" style="top: 5%; left: 55%;" data-text="OBSERVE">OBSERVE</div>
+        <div class="text-item" style="top: 5%; left: 75%;" data-text="&">& </div>
+        <div class="text-item" style="top: 5%; left: 85%;" data-text="FEEL">FEEL</div>
+
+        <div class="text-item" style="top: 10%; left: 12%;" data-text="MAKE">MAKE</div>
+        <div class="text-item" style="top: 10%; left: 45%;" data-text="BETTER">BETTER</div>
+        <div class="text-item" style="top: 10%; right: 20%;" data-text="DECISIONS">DECISIONS</div>
+
+        <div class="text-item" style="top: 15%; left: 8%;" data-text="THE">THE</div>
+        <div class="text-item" style="top: 15%; left: 30%;" data-text="CREATIVE">CREATIVE</div>
+        <div class="text-item" style="top: 15%; left: 55%;" data-text="PROCESS">PROCESS</div>
+        <div class="text-item" style="top: 15%; right: 20%;" data-text="IS">IS</div>
+        <div class="text-item" style="top: 15%; right: 5%;" data-text="MYSTERIOUS">MYSTERIOUS</div>
+
+        <div class="text-item" style="top: 25%; left: 5%;" data-text="S">S</div>
+        <div class="text-item" style="top: 25%; left: 10%;" data-text="I">I</div>
+        <div class="text-item" style="top: 25%; left: 15%;" data-text="M">M</div>
+        <div class="text-item" style="top: 25%; left: 20%;" data-text="P">P</div>
+        <div class="text-item" style="top: 25%; left: 25%;" data-text="L">L</div>
+        <div class="text-item" style="top: 25%; left: 30%;" data-text="I">I</div>
+        <div class="text-item" style="top: 25%; left: 35%;" data-text="C">C</div>
+        <div class="text-item" style="top: 25%; left: 40%;" data-text="I">I</div>
+        <div class="text-item" style="top: 25%; left: 45%;" data-text="T">T</div>
+        <div class="text-item" style="top: 25%; left: 50%;" data-text="Y">Y</div>
+        <div class="text-item" style="top: 25%; right: 5%;" data-text="IS THE KEY">IS THE KEY</div>
+
+        <div class="text-item" style="top: 35%; left: 25%;" data-text="FIND YOUR VOICE">FIND YOUR VOICE</div>
+        <div class="text-item" style="top: 35%; left: 65%;" data-text="TRUST INTUITION">TRUST INTUITION</div>
+
+        <div class="text-item" style="top: 50%; left: 5%;" data-text="EMBRACE SILENCE">EMBRACE SILENCE</div>
+        <div class="text-item" style="top: 50%; right: 5%;" data-text="QUESTION EVERYTHING">QUESTION EVERYTHING</div>
+
+        <div class="text-item" style="top: 75%; left: 20%;" data-text="TRUTH">TRUTH</div>
+        <div class="text-item" style="top: 75%; right: 20%;" data-text="WISDOM">WISDOM</div>
+
+        <div class="text-item" style="top: 80%; left: 10%;" data-text="FOCUS">FOCUS</div>
+        <div class="text-item" style="top: 80%; left: 35%;" data-text="ATTENTION">ATTENTION</div>
+        <div class="text-item" style="top: 80%; left: 65%;" data-text="AWARENESS">AWARENESS</div>
+        <div class="text-item" style="top: 80%; right: 10%;" data-text="PRESENCE">PRESENCE</div>
+
+        <div class="text-item" style="top: 85%; left: 25%;" data-text="SIMPLIFY">SIMPLIFY</div>
+        <div class="text-item" style="top: 85%; right: 25%;" data-text="REFINE">REFINE</div>
+    </div>
+
+    <div class="main-content">
+        <div class="sliced-container">
+            <!-- Names of containers will be focus  presence and feel -->
+            <div class="text-row" data-row-id="focus">
+                <div class="text-content" data-text="FOCUS">FOCUS</div>
+                <div class="interactive-area"></div>
+            </div>
+
+            <div class="text-row" data-row-id="presence">
+                <div class="text-content" data-text="PRESENCE">PRESENCE</div>
+                <div class="interactive-area"></div>
+            </div>
+
+            <div class="text-row" data-row-id="feel">
+                <div class="text-content" data-text="ANGAJ">ANGAJ</div>
+                <div class="interactive-area"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="type" id="kinetic-type" aria-hidden="true">
+        <div class="type-line odd">focus focus focus</div>
+        <div class="type-line even">presence presence presence</div>
+        <div class="type-line odd">feel feel feel</div>
+        <div class="type-line even">focus focus focus</div>
+        <div class="type-line odd">presence presence presence</div>
+        <div class="type-line even">focus focus focus</div>
+        <div class="type-line odd">focus focus focus</div>
+        <div class="type-line even">presence presence presence</div>
+        <div class="type-line odd">feel feel feel</div>
+        <div class="type-line even">focus focus focus</div>
+        <div class="type-line odd">presence presence presence</div>
+        <div class="type-line even">focus focus focus</div>
+    </div>
+</head>
+
+<style>
+    .enter-button {
+        position: fixed;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        padding: 10px 30px;
+        font-family: "PP Neue Montreal", sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        text-decoration: none;
+        color: #ffcc00;
+        border: 1px solid #ffcc00;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+    }
+
+    .enter-button:hover {
+        background-color: #ffcc00;
+        color: #000;
+    }
+</style>
 </head>
 
 <body>
 
-    <div id="preloader">
-        <div class="loader"></div>
+    <div class="background-frame"></div>
+    <div class="background-image default" id="default-bg"></div>
+    <div class="type" id="kinetic-type" aria-hidden="true">
     </div>
 
-    <div id="interactive-bg"></div>
+    <a href="home.html" class="enter-button">ENTER SITE</a>
 
-    <header class="header">
-        <a href="#home" class="logo nav-link">YourName</a>
-        <div class="menu-btn">MENU</div>
-    </header>
 
-    <nav class="nav-overlay">
-        <div class="close-btn">&times;</div>
-        <ul>
-            <li><a href="#home" class="nav-link">Home</a></li>
-            <li><a href="#about" class="nav-link">About</a></li>
-            <li><a href="#services" class="nav-link">Skills</a></li>
-            <li><a href="#portfolio" class="nav-link">Projects</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
-        </ul>
-    </nav>
 
-    <div class="social-links">
-        <a href="#">LinkedIn</a>
-        <a href="#">Instagram</a>
-        <a href="#">Behance</a>
-    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
-    <!-- UPDATED: Animated Scroll Indicator -->
-    <div class="scroll-indicator" aria-hidden="true">
-        <div class="scroll-arrow"></div>
-    </div>
-
-    <main class="main-content">
-
-        <section class="section active" id="home">
-            <div class="home-content">
-                <h1>
-                    <span class="static-headline">Hey, I'm Angaj!</span>
-                    <br>
-                    <span class="animated-headline">
-                        <span class="words-wrapper">
-                            <b class="is-visible">Digital Creator</b>
-                            <b>Web Developer</b>
-                            <b>UI/UX Designer</b>
-                        </span>
-                    </span>
-                </h1>
-            </div>
-        </section>
-
-        <section class="section" id="about">
-            <div class="section-container">
-                <h2 class="section-title">About Me</h2>
-                <p class="section-subtitle">A little bit about who I am and what I do.</p>
-
-                <div class="about-content">
-                    <div class="about-image">
-                        <img src="https://placehold.co/600x400/6a5acd/ffffff?text=Your+Photo" alt="Your Name"
-                            onerror="this.src='https://placehold.co/600x400/ef4444/ffffff?text=Image+Error';this.onerror=null;">
-                    </div>
-                    <div class="about-text">
-                        <h3>I'm Your Name, a passionate creator based in Your City.</h3>
-                        <p>
-                            I specialize in building beautiful, functional, and user-centric digital experiences.
-                            With over X years of experience, I've helped clients from all over the world
-                            bring their visions to life.
-                        </p>
-                        <p>
-                            Whether it's web design, content creation, or digital strategy, I'm dedicated to
-                            delivering high-quality work that gets results.
-                        </p>
-                        <a href="#contact" class="btn nav-link">Let's Talk</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="services">
-            <div class="section-container">
-                <h2 class="section-title">Skills</h2>
-                <p class="section-subtitle">My technical and creative arsenal.</p>
-
-                <div class="services-grid">
-                    <div class="service-item">
-                        <img src="https://placehold.co/110x110/111111/ffffff?text=W&font=poppins" alt="Word"
-                            title="Word">
-                    </div>
-                    <div class="service-item">
-                        <img src="https://placehold.co/110x110/111111/ffffff?text=Figma&font=poppins" alt="Figma"
-                            title="Figma">
-                    </div>
-                    <div class="service-item">
-                        <img src="https://placehold.co/110x110/111111/ffffff?text=Xd&font=poppins" alt="XD"
-                            title="Adobe XD">
-                    </div>
-                    <div class="service-item">
-                        <img src="https://placehold.co/110x110/111111/ffffff?text=Ai&font=poppins" alt="Illustrator"
-                            title="Adobe Illustrator">
-                    </div>
-                    <div class="service-item">
-                        <img src="https://placehold.co/110x110/111111/ffffff?text=Ps&font=poppins" alt="Photoshop"
-                            title="Adobe Photoshop">
-                    </div>
-                    <div class="service-item">
-                        <img src="https://placehold.co/110x110/111111/ffffff?text=Ae&font=poppins" alt="After Effects"
-                            title="Adobe After Effects">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="portfolio">
-            <div class="section-container">
-                <h2 class="section-title">Projects</h2>
-                <p class="section-subtitle">A selection of my recent work.</p>
-
-                <div class="swiper-container" id="portfolio-swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+1" alt="Project 1"
-                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+2" alt="Project 2"
-                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+3" alt="Project 3"
-                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+4" alt="Project 4"
-                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+5" alt="Project 5"
-                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="https://placehold.co/400x280/6a5acd/ffffff?text=Project+6" alt="Project 6"
-                                onerror="this.src='https://placehold.co/400x280/ef4444/ffffff?text=Image+Error';this.onerror=null;">
-                        </div>
-                    </div>
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                </div>
-
-            </div>
-        </section>
-
-        <section class="section" id="contact">
-            <div class="section-container">
-                <h2 class="section-title">Get In Touch</h2>
-                <p class="section-subtitle">Have a project in mind? I'd love to hear from you.</p>
-
-                <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-                    <div class="form-group">
-                        <input type="text" name="name" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" name="email" placeholder="Your Email" required>
-                    </div>
-                    <div class="form-group full-width">
-                        <input type="text" name="subject" placeholder="Subject" required>
-                    </div>
-                    <div class="form-group full-width">
-                        <textarea name="message" placeholder="Your Message" required></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <button type="submit" class="btn">Send Message</button>
-                    </div>
-                </form>
-
-            </div>
-        </section>
-
-    </main>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js"></script>
 
     <script src="script.js"></script>
-
 </body>
 
 </html>

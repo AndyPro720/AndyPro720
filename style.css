@@ -1,814 +1,340 @@
-/* --- GLOBAL STYLES --- */
-/* === OPTIMIZATION: @import moved to <head> <link> === */
-/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap'); */
-
-:root {
-    /* === EDIT HERE: Customize Colors === */
-    --primary-color: #6a5acd; /* Indigo */
-    --primary-color-dark: #483d8b; /* Darker Indigo */
-    --bg-color: #000000;
-    --surface-color: #111111;
-    --text-color: #ffffff;
-    --text-color-secondary: #aaaaaa;
-    /* === END EDIT === */
-}
+/* Shhhh I'm using three different fonts, but i don't care */
+@import url("https://fonts.cdnfonts.com/css/longsile");
+@import url("https://fonts.cdnfonts.com/css/thegoodmonolith");
+@import url("https://fonts.cdnfonts.com/css/pp-neue-montreal");
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* --- NEW: Smooth scrolling --- */
-html {
-    background-color: var(--bg-color); /* Fallback */
-    scroll-behavior: smooth;
-}
-/* === END FIX === */
-
-html, body {
-    width: 100%;
-    height: 100%;
-    font-family: 'Poppins', sans-serif;
-    /* === FIX: Removed background-color from this rule === */
-    /* background-color: var(--bg-color); */ 
-    /* === END FIX === */
-    color: var(--text-color);
-    overflow: hidden; /* This is key to the single-page feel */
-    position: relative;
+:root {
+  --text: #ffcc00;
+  --bg: #000000;
+  --highlight-bg: #ffcc00;
+  --type-line-opacity: 0.05;
 }
 
-/* === FIX: Added html-only rule for fallback background === */
-/* MOVED to html rule above */
-/* === END FIX === */
-
-/* === FIX: Moved animated gradient to pseudo-element === */
-/* --- MODIFIED: Commented out to remove animated gradient --- */
-/*
-body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(-45deg, #0a0a0a, #1a1a1a, #050505, #111111);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    z-index: -2; /* Sit behind interactive-bg and content */
-}
-*/
-/* === END FIX === */
-
-a {
-    text-decoration: none;
-    color: var(--primary-color);
-    transition: color 0.3s ease;
-}
-/* --- UPDATED: Wrapped hover in media query --- */
-@media (hover: hover) {
-    a:hover {
-        color: var(--primary-color-dark);
-    }
-}
-a:active { /* --- FIX: Added :active for mobile --- */
-    color: var(--primary-color-dark);
+body {
+  background-color: var(--bg);
+  min-height: 100vh;
+  overflow: hidden;
+  font-family: "Longsile", sans-serif;
+  position: relative;
 }
 
-img {
-    max-width: 100%;
-    height: auto;
+.background-frame {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-image: url("https://assets.codepen.io/7558/web03.webp");
+  background-size: 100% 100%;
+  background-position: center;
+  z-index: 0;
+  pointer-events: none;
 }
 
-/* --- PRELOADER --- */
-#preloader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--bg-color);
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.5s ease;
-}
-.loader {
-    width: 50px;
-    height: 50px;
-    border: 5px solid var(--surface-color);
-    border-top-color: var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-@keyframes spin {
-    to { transform: rotate(360deg); }
+.bottom-gradient {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40vh;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
 }
 
-/* === FIX: Added animated gradient keyframes === */
-/* --- MODIFIED: Commented out to remove animated gradient --- */
-/*
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-*/
-/* === END FIX === */
-
-/* --- NEW: Custom Scrollbar --- */
-::-webkit-scrollbar {
-    width: 8px;
-    background: var(--bg-color);
-}
-::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-color-dark);
-}
-/* --- END NEW --- */
-
-/* --- FIX: Re-added Interactive Background --- */
-#interactive-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; /* Above gradient, behind content */
-    pointer-events: none; /* Won't block clicks */
-    background: transparent; /* Default state */
-}
-/* === END FIX === */
-
-/* --- HEADER (LOGO & MENU BUTTON) --- */
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 30px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 100;
-}
-.header .logo {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--text-color);
-}
-.menu-btn {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text-color);
-    cursor: pointer;
-    z-index: 101; /* Above header, below menu */
-    position: relative;
+.background-image {
+  position: fixed;
+  width: calc(100%);
+  height: calc(100vh);
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  z-index: 1;
+  mix-blend-mode: multiply;
+  transition: opacity 0.8s ease-in-out;
 }
 
-/* --- NAVIGATION OVERLAY --- */
-.nav-overlay {
-    position: fixed;
-    top: 0;
-    right: -100%; /* Start off-screen */
-    width: 100%;
-    height: 100%;
-    background-color: rgba(17, 17, 17, 0.95);
-    backdrop-filter: blur(10px);
-    z-index: 100;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: right 0.7s cubic-bezier(0.7, 0, 0.3, 1);
-}
-.nav-overlay.open {
-    right: 0;
-}
-.nav-overlay ul {
-    list-style: none;
-    text-align: center;
-}
-.nav-overlay ul li {
-    margin: 20px 0;
-}
-.nav-overlay ul li a {
-    font-size: 4vw;
-    font-weight: 600;
-    color: var(--text-color);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    transition: color 0.3s ease;
-    /* --- FIX: Updated reflection color --- */
-    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 70%, rgba(106, 90, 205, 0.15));
-    /* --- END FIX --- */
-}
-/* --- UPDATED: Wrapped hover in media query --- */
-@media (hover: hover) {
-    .nav-overlay ul li a:hover {
-        color: var(--primary-color);
-    }
-}
-.nav-overlay ul li a:active { /* --- FIX: Added :active for mobile --- */
-    color: var(--primary-color);
+.background-image.default {
+  background-image: url("https://assets.codepen.io/7558/wave-bg-001.webp");
+  opacity: 1;
 }
 
-/* --- FIX: Added Close Button for Menu --- */
-.close-btn {
-    position: absolute;
-    top: 30px;
-    right: 40px;
-    font-size: 48px; /* Bigger, easier to click */
-    color: var(--text-color);
-    cursor: pointer;
-    transition: transform 0.3s ease, color 0.3s ease;
-    z-index: 102; /* Above nav links */
-    line-height: 1;
-}
-/* --- UPDATED: Wrapped hover in media query --- */
-@media (hover: hover) {
-    .close-btn:hover {
-        color: var(--primary-color);
-        transform: rotate(90deg);
-    }
-}
-.close-btn:active { /* --- FIX: Added :active for mobile --- */
-    color: var(--primary-color);
-    transform: rotate(90deg);
-}
-/* --- END FIX --- */
-
-/* --- SOCIAL LINKS --- */
-.social-links {
-    position: fixed;
-    bottom: 30px;
-    left: 40px;
-    z-index: 10;
-}
-.social-links a {
-    margin-right: 20px;
-    font-size: 14px;
-    color: var(--text-color-secondary);
-}
-/* --- UPDATED: Wrapped hover in media query --- */
-@media (hover: hover) {
-    .social-links a:hover {
-        color: var(--primary-color);
-    }
-}
-.social-links a:active { /* --- FIX: Added :active for mobile --- */
-    color: var(--primary-color);
+.background-image.focus {
+  background-image: url("https://assets.codepen.io/7558/wave-bg-002.webp");
 }
 
-/* --- SCROLL INDICATOR (UPDATED) --- */
-.scroll-indicator {
-    position: fixed;
-    /* --- MODIFIED: Centered --- */
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%); /* Center horizontally */
-    /* --- END MODIFIED --- */
-    z-index: 10;
-    width: 24px;
-    height: 40px;
-    /* --- NEW: Hide by default, shown by JS --- */
-    display: none;
-}
-.scroll-arrow {
-    width: 24px;
-    height: 24px;
-    border-left: 2px solid var(--text-color-secondary);
-    border-bottom: 2px solid var(--text-color-secondary);
-    transform: rotate(-45deg);
-    opacity: 0;
-    animation: bounce 4s infinite;
+.background-image.presence {
+  background-image: url("https://assets.codepen.io/7558/wave-bg-003.webp");
 }
 
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0) rotate(-45deg);
-        opacity: 0;
-    }
-    40% {
-        transform: translateY(10px) rotate(-45deg);
-        opacity: 1;
-    }
-    60% {
-        transform: translateY(5px) rotate(-45deg);
-        opacity: 1;
-    }
+.background-image.feel {
+  background-image: url("https://assets.codepen.io/7558/wave-bg-004.webp");
 }
-/* --- END SCROLL INDICATOR --- */
 
+.text-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
 
-/* --- MAIN SECTIONS WRAPPER --- */
+.text-item {
+  position: absolute;
+  color: var(--text);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  opacity: 0.8;
+  white-space: nowrap;
+  font-family: "TheGoodMonolith", monospace;
+  z-index: 0;
+}
+
+.text-item::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -4px;
+  width: 0;
+  height: calc(100% + 4px);
+  background-color: var(--highlight-bg);
+  z-index: 1;
+  transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.text-item.highlight::after {
+  width: calc(100% + 8px);
+}
+
+.text-item.highlight-reverse::after {
+  width: 0;
+  right: -4px;
+  left: auto;
+}
+
 .main-content {
-    width: 100%;
-    height: 100%;
-    position: relative;
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-/* --- SECTION STYLING (THE KEY) --- */
-.section {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: 100px 40px;
-    display: flex;
-    justify-content: center;
-    /* === FIX: Reverted to 'center' to fix Home page alignment === */
-    align-items: center; /* Was 'flex-start' */
-    /* === END FIX === */
-    
-    overflow-x: hidden; /* --- FIX: Prevents horizontal scroll from swiper --- */
-
-    /* --- FIX: Removed global overflow --- */
-    /* overflow-y: auto; */
-    /* --- END FIX --- */
-    
-    /* Transition */
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(50px); /* Start 50px down */
-    /* --- FIX: Faster transition speed --- */
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out, visibility 0.5s;
-    /* --- END FIX --- */
-    z-index: 2; /* Above interactive-bg */
+.sliced-container {
+  position: relative;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  transform: translateZ(0);
 }
-.section.active {
+
+.text-row {
+  position: relative;
+  width: 100%;
+  height: 140px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  z-index: 100;
+}
+
+.text-content,
+.char,
+.char-inner {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.text-content {
+  position: relative;
+  font-size: 10rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  color: var(--text);
+  letter-spacing: 0px;
+  transition: letter-spacing 0.5s ease;
+  visibility: hidden;
+  transform: translate3d(0, 0, 0);
+}
+
+.text-row:hover .text-content {
+  letter-spacing: 5px;
+}
+
+.interactive-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.char {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  max-width: 80px;
+  transition: max-width 0.64s cubic-bezier(0.86, 0, 0.07, 1);
+  margin-right: 0px;
+}
+
+.text-row.active .char::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 80%;
+  background-color: rgba(255, 204, 0, 0.2);
+  transform: none;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+  animation-delay: calc(var(--char-index, 0) * 0.05s);
+}
+
+@keyframes fadeIn {
+  to {
     opacity: 1;
-    visibility: visible;
-    transform: translateY(0); /* Slide to 0 */
-    z-index: 3; /* Above other sections */
-}
-.section-container {
-    max-width: 1200px;
-    width: 100%;
-    text-align: center;
-    position: relative;
-    z-index: 3;
+  }
 }
 
-/* --- FIX: Add scroll only to long sections --- */
-#about, #services, #portfolio {
-    align-items: flex-start; /* Override vertical centering */
-    overflow-y: auto;       /* Allow scrolling *within* these sections */
-    -webkit-overflow-scrolling: touch; /* --- NEW: Smooth scroll iOS --- */
-}
-/* --- END FIX --- */
-
-/* --- HOME SECTION --- */
-#home {
-    justify-content: flex-start; /* Fixes centering issue */
-    text-align: left;
-}
-.home-content {
-    position: relative;
-    z-index: 2;
-    padding-left: 10%;
-}
-.home-content h1 {
-    font-size: 5vw;
-    font-weight: 700;
-    margin-bottom: 20px;
-    line-height: 1.2;
-}
-/* --- FIX: Added reflection to static part of headline --- */
-.home-content h1 .static-headline {
-    display: inline-block; /* Required for reflection */
-    /* --- FIX: Updated reflection color --- */
-    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 10%, rgba(105, 90, 205, 0.403));
-}
-/* --- END FIX --- */
-.home-content h1 span {
-    color: var(--primary-color);
+.char.narrow-char {
+  max-width: 40px;
 }
 
-/* --- FIX: Animated Headline (Re-engineered) --- */
-.animated-headline {
-    display: block;
-    position: relative;
-    height: 70px; /* Adjust height based on font size */
-    overflow: hidden; /* ADDED */
-}
-/* --- FIX: Added reflection to "I'm a" prefix --- */
-.home-content h1 .animated-headline .static-prefix {
-    display: inline-block;
-    /* --- FIX: Updated reflection color --- */
-    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 70%, rgba(106, 90, 205, 0.15));
-}
-/* --- END FIX --- */
-.animated-headline .words-wrapper {
-    display: inline-block;
-    position: relative; /* CHANGED */
-    transform: translateY(0);
-    transition: transform 0.5s ease-in-out; /* ADDED */
-    height: 60px;
-}
-.animated-headline b {
-    display: block; /* CHANGED */
-    position: relative; /* CHANGED */
-    left: auto; /* RESET */
-    top: auto; /* RESET */
-    opacity: 1; /* CHANGED */
-    width: auto; /* CHANGED */
-    height: 60px; /* Match parent */
-    line-height: 60px; /* Center text */
-    color: var(--primary-color);
-    transition: none; /* RESET */
-    /* --- FIX: Updated reflection color --- */
-    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 10%, rgba(106, 90, 205, 0.15));
-    /* --- END FIX --- */
-}
-/* REMOVED .is-visible and .is-hidden logic, not needed */
-/* --- END FIX --- */
-
-/* --- OTHER SECTIONS (ABOUT, SERVICES, ETC.) --- */
-.section-title {
-    font-size: 3vw;
-    font-weight: 700;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-}
-.section-subtitle {
-    font-size: 1.2rem;
-    color: var(--text-color-secondary);
-    margin-bottom: 50px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+.char:last-child::after {
+  display: none;
 }
 
-/* About Section */
-#about .about-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    text-align: left;
-    align-items: center;
-}
-#about .about-image img {
-    border-radius: 10px;
-    width: 100%;
-    height: 400px;
-    object-fit: cover;
-}
-#about .about-text h3 {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-}
-#about .about-text p {
-    font-size: 1rem;
-    color: var(--text-color-secondary);
-    line-height: 1.7;
-    margin-bottom: 20px;
-}
-.btn {
-    display: inline-block;
-    padding: 12px 30px;
-    background-color: var(--primary-color);
-    color: var(--text-color);
-    border: 2px solid var(--primary-color);
-    border-radius: 30px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-/* --- UPDATED: Wrapped hover in media query --- */
-@media (hover: hover) {
-    .btn:hover {
-        background-color: transparent;
-        color: var(--primary-color);
-    }
-}
-.btn:active { /* --- FIX: Added :active for mobile --- */
-    background-color: transparent;
-    color: var(--primary-color);
+.char-inner {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+  transform: translate3d(-20px, 0, 0);
 }
 
-/* --- 3D Carousel (Swiper.js) Styles --- */
-.swiper-container {
-    width: 100%;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    perspective: 1200px; 
-    overflow: visible;
+.type {
+  position: fixed;
+  height: 100vmax;
+  width: 100vmax;
+  text-transform: uppercase;
+  display: none;
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  margin-top: -50vmax;
+  margin-left: -50vmax;
+  will-change: transform;
+  z-index: 5;
+  transform-style: preserve-3d;
+  pointer-events: none;
 }
-.swiper-slide {
-    background-position: center;
-    background-size: cover;
-    width: 400px; 
-    height: 280px;
-    border-radius: 10px;
-    overflow: hidden;
-    /* --- FIX: Updated reflection color --- */
-    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 10%, rgba(105, 90, 205, 0.315)); 
-    /* --- END FIX --- */
-    max-width: 90vw; /* --- NEW: Prevent mobile overflow --- */
-    transition: transform 0.2s ease; /* --- NEW: Active state transition --- */
-}
-/* --- NEW: Active state for swiper slides --- */
-@media (hover: hover) {
-    .swiper-slide:hover {
-        transform: scale(1.05);
-    }
-}
-.swiper-slide:active {
-    transform: scale(1.02);
-}
-/* --- END NEW --- */
-.swiper-slide img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-/* --- NEW: Touch-friendly swiper buttons --- */
-.swiper-button-next,
-.swiper-button-prev {
-    width: 44px;
-    height: 44px;
-    line-height: 44px;
-    /* background: rgba(0,0,0,0.3); */ /* Optional: for visibility */
-    /* border-radius: 50%; */
-}
-/* --- END NEW --- */
-.swiper-button-next::after,
-.swiper-button-prev::after {
-    font-size: 24px; /* Removed !important */
-    color: var(--primary-color);
-}
-.swiper-pagination-bullet {
-    background: var(--text-color-secondary);
-}
-.swiper-pagination-bullet-active {
-    background: var(--primary-color);
-}
-/* --- End Swiper.js Styles --- */
 
+.type-line {
+  white-space: nowrap;
+  font-size: clamp(7rem, 18.75vh, 15rem);
+  line-height: 0.75;
+  font-weight: bold;
+  font-family: "PP Neue Montreal", sans-serif;
+  color: #ffffff;
+  opacity: var(--type-line-opacity);
+  user-select: none;
+  will-change: transform, opacity;
+  position: relative;
+}
 
-/* Services Section */
-.services-grid {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    flex-wrap: wrap;
+.type-line.odd {
+  z-index: 50;
 }
-.service-item {
-    background-color: transparent;
-    padding: 0;
-    border-radius: 0;
-    text-align: center;
-    transition: transform 0.3s ease;
+
+.type-line.even {
+  z-index: 150;
 }
-/* --- UPDATED: Wrapped hover in media query --- */
-@media (hover: hover) {
-    .service-item:hover {
-        transform: translateY(-10px);
-    }
-}
-.service-item:active { /* --- FIX: Added :active for mobile --- */
-    transform: translateY(-10px);
-}
-.service-item .icon { display: none; }
-.service-item h4 { display: none; }
-.service-item p { display: none; }
-.service-item img {
-    width: 110px;
+
+/* Mobile Optimization */
+
+/* For tablets and smaller screens */
+@media screen and (max-width: 992px) {
+  .text-content {
+    font-size: 7rem;
+  }
+
+  .text-row {
     height: 110px;
-    object-fit: cover;
-    border-radius: 24px;
-    /* --- FIX: Updated reflection color --- */
-    -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 30%, rgba(105, 90, 205, 0.325));
-    /* --- END FIX --- */
+  }
+
+  .type-line {
+    font-size: clamp(5rem, 12vh, 10rem);
+  }
 }
 
-/* Portfolio Section */
-.portfolio-grid { display: none; }
-.portfolio-item { display: none; }
-.portfolio-item img { display: none; }
-.portfolio-item:hover img { display: none; }
-.portfolio-overlay { display: none; }
-.portfolio-item:hover .portfolio-overlay { opacity: 0; }
-.portfolio-overlay h4 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-color);
-    transform: translateY(10px);
-    transition: transform 0.4s ease;
-}
-.portfolio-item:hover .portfolio-overlay h4 {
-    transform: translateY(0);
+/* For mobile phones */
+@media screen and (max-width: 768px) {
+  .text-content {
+    font-size: 5rem;
+  }
+
+  .text-row {
+    height: 80px;
+    margin: 8px 0;
+  }
+
+  .type-line {
+    font-size: clamp(3.5rem, 8vh, 7rem);
+  }
+
+  .text-item {
+    font-size: 0.7rem;
+  }
 }
 
-/* Contact Section */
-.contact-form {
-    max-width: 700px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-.contact-form .form-group {
-    width: 100%;
-}
-.contact-form .full-width {
-    grid-column: 1 / -1;
-}
-.contact-form input,
-.contact-form textarea {
-    width: 100%;
-    padding: 15px;
-    background-color: var(--surface-color);
-    border: 1px solid var(--surface-color);
-    border-radius: 5px;
-    color: var(--text-color);
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px; /* --- NEW: Prevent iOS zoom --- */
-}
-.contact-form input:focus,
-.contact-form textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-}
-.contact-form textarea {
-    height: 150px;
-    resize: none;
-}
-.contact-form .btn {
-    cursor: pointer;
-}
+/* For very small screens */
+@media screen and (max-width: 480px) {
+  .text-content {
+    font-size: 3.5rem;
+  }
 
-/* --- RESPONSIVE --- */
-/* --- FIX: Rebuilt responsive rules to fix overflows --- */
-@media (max-width: 992px) {
-    .home-content h1 { font-size: 7vw; }
-    /* Use fixed px for headline height to prevent wrapping */
-    .animated-headline { 
-        height: 50px; 
-        /* --- MODIFIED: Removed to fix text wrapping --- */
-        /* white-space: nowrap; */ 
-    }
-    .animated-headline b { 
-        height: 50px; 
-        line-height: 50px; 
-    }
+  .text-row {
+    height: 60px;
+    margin: 6px 0;
+  }
 
-    /* This rule fixes the "About Me" overflow */
-    #about .about-content { 
-        grid-template-columns: 1fr; 
-    }
-    /* --- UPDATED: Image no longer hidden on tablet --- */
-    #about .about-image { 
-        /* display: none; */ /* Hide img on tablet */
-        max-height: 400px;
-        display: block;
-    }
-    #about .about-image img {
-        height: 400px; /* Match original height */
-    }
-    /* --- END UPDATE --- */
+  .type-line {
+    font-size: clamp(2.5rem, 6vh, 5rem);
+  }
 
-    /* Tablet-specific layout for services */
-    .services-grid { 
-        grid-template-columns: 1fr 1fr; 
-    }
+  .text-item {
+    font-size: 0.6rem;
+  }
 }
-
-@media (max-width: 768px) {
-    .header { padding: 20px; }
-    .social-links { display: none; }
-    /* --- MODIFIED: Hide text scroll indicator on mobile --- */
-    /* .scroll-indicator { display: none; } */
-    /* --- NOTE: The new arrow indicator logic handles its own visibility --- */
-    
-    .nav-overlay ul li a { font-size: 8vw; }
-    
-    .close-btn {
-        top: 20px;
-        right: 20px;
-        font-size: 40px;
-    }
-
-    .section { padding: 80px 20px; }
-    .home-content { padding-left: 0; text-align: center; }
-    .home-content h1 { font-size: 10vw; }
-
-    /* --- NEW: Force animated text to stack on mobile --- */
-    .animated-headline .static-prefix {
-        display: block;
-        /* Re-apply reflection as display:block breaks the parent's */
-        -webkit-box-reflect: below 2px linear-gradient(transparent, transparent 30%, rgba(106, 90, 205, 0.15));
-    }
-    .animated-headline .words-wrapper {
-        display: block; /* Also make this block */
-        margin: 0 auto; /* Center it */
-    }
-    /* --- END NEW --- */
-
-    .animated-headline { 
-        height: auto; /* --- MODIFIED: Allow height to be auto for stacking --- */ 
-    }
-    .animated-headline b { 
-        height: 60px; 
-        line-height: 60px; 
-    }
-
-    .section-title { font-size: 6vw; }
-    
-    /* --- FIX: Make "About Me" text more compact on mobile --- */
-    #about .about-text h3 {
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-    }
-    #about .about-text p {
-        font-size: 0.9rem;
-        line-height: 1.6;
-    }
-    /* --- END FIX --- */
-    #about .about-content { 
-        grid-template-columns: 1fr; 
-    }
-    /* --- NEW: Show image on mobile --- */
-    #about .about-image { 
-        display: block;
-        margin-bottom: 20px;
-    }
-    #about .about-image img {
-        max-height: 300px;
-        width: 100%;
-        object-fit: cover;
-    }
-    /* --- END NEW --- */
-
-    /* Mobile-specific layouts */
-    /* --- FIX: Added responsive width for swiper slides --- */
-    .swiper-slide {
-        width: 300px;
-    }
-    /* --- END FIX --- */
-    .services-grid { 
-        grid-template-columns: 1fr; 
-    }
-    .contact-form { 
-        grid-template-columns: 1fr; 
-    }
-}
-
-/* --- FIX: Make content more compact on short viewports --- */
-@media (max-height: 750px) and (min-width: 769px) { 
-    /* Target medium-height desktops/tablets, but not phones */
-    
-    #about .about-content {
-        gap: 20px; /* Reduce gap */
-    }
-    #about .about-text h3 {
-        font-size: 1.5rem; /* Smaller heading */
-        margin-bottom: 10px;
-    }
-    #about .about-text p {
-        font-size: 0.9rem; /* Smaller text */
-        line-height: 1.6;
-        margin-bottom: 15px;
-    }
-    .section {
-        /* Reduce vertical padding */
-        padding-top: 80px; 
-        padding-bottom: 20px; 
-    }
-    .section-subtitle {
-        margin-bottom: 30px; /* Less margin */
-    }
-    #about .about-image img {
-        height: 300px; /* Smaller image */
-    }
-}
-/* --- END FIX --- */
-
-/* --- NEW: Extra-small screen breakpoint --- */
-@media (max-width: 480px) {
-    .home-content h1 { 
-        font-size: 11vw; /* --- UPDATED: Reduced from 12vw for better wrapping --- */
-    }
-    .section-title { 
-        font-size: 8vw; 
-    }
-    #about .about-image img {
-        max-height: 250px; /* Even smaller image */
-    }
-    .swiper-slide {
-        width: 280px; /* Smaller slides */
-    }
-    /* Hide swiper arrows on mobile, swipe is better */
-    .swiper-button-next,
-    .swiper-button-prev {
-        display: none;
-    }
-}
-/* --- END NEW --- */
