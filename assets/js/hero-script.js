@@ -140,8 +140,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 } 
 
+        let startupAnimationActive = true;
+        let startupAnimationProgress = 0;
+        
+        function simulateMouseMovement() {
+            if (!startupAnimationActive) return;
+            
+            // Create a natural curved path between the two text lines
+            const progress = startupAnimationProgress / 100;
+            const centerX = canvas.width / 2;
+            const fontSize = canvas.width <= 768 ? 40 : canvas.width <= 1200 ? 60 : 80;
+            const y1 = canvas.height / 2 - (fontSize * 0.7);
+            const y2 = canvas.height / 2 + (fontSize * 0.7);
+            
+            // Use sine wave for natural movement
+            const curveX = centerX + Math.sin(progress * Math.PI * 2) * 100;
+            const curveY = y1 + (y2 - y1) * progress;
+            
+            mouse.x = curveX;
+            mouse.y = curveY;
+            
+            startupAnimationProgress += 0.5;
+            if (startupAnimationProgress >= 200) {
+                startupAnimationActive = false;
+            }
+        }
+
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (startupAnimationActive) {
+                simulateMouseMovement();
+            }
             
             particles.forEach(p => {
                 p.update();
@@ -150,6 +180,11 @@ document.addEventListener("DOMContentLoaded", () => {
             
             requestAnimationFrame(animate);
         }
+
+        // Disable startup animation on real mouse movement
+        window.addEventListener('mousemove', () => {
+            startupAnimationActive = false;
+        });
 
         // Initialize - wait for canvas to be ready
         setTimeout(() => {
