@@ -16,10 +16,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const backgroundTextItems = document.querySelectorAll(".text-item");
     const backgroundImages = {
       default: document.getElementById("default-bg"),
-      focus: document.getElementById("focus-bg"),
-      presence: document.getElementById("presence-bg"),
-      feel: document.getElementById("feel-bg")
+      server: document.getElementById("server-bg"),
+      dev: document.getElementById("dev-bg"),
+      angaj: document.getElementById("angaj-bg")
     };
+    
+    // Makes the new prompt pulse gently
+    gsap.to(".hover-prompt", {
+      opacity: 1,
+      duration: 2.5,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut"
+    });
 
     function switchBackgroundImage(id) {
       Object.values(backgroundImages).forEach((bg) => {
@@ -48,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const alternativeTexts = {
-      focus: {
+      server: {
         BE: "BECOME",
         PRESENT: "MINDFUL",
         LISTEN: "HEAR",
@@ -86,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
         SIMPLIFY: "MINIMIZE",
         REFINE: "PERFECT"
       },
-      presence: {
+      dev: {
         BE: "EVOLVE",
         PRESENT: "ENGAGED",
         LISTEN: "ABSORB",
@@ -124,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
         SIMPLIFY: "STREAMLINE",
         REFINE: "OPTIMIZE"
       },
-      feel: {
+      angaj: {
         BE: "SEE",
         PRESENT: "FOCUSED",
         LISTEN: "UNDERSTAND",
@@ -153,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "TRUST INTUITION": "BELIEVE YOUR EYES",
         "EMBRACE SILENCE": "SEEK STILLNESS",
         "QUESTION EVERYTHING": "CLARIFY ASSUMPTIONS",
-        TRUTH: "REALITY",
+        NOTTRUTH: "domain",
         WISDOM: "PERCEPTION",
         FOCUS: "CLARITY",
         ATTENTION: "OBSERVATION",

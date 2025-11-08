@@ -11,9 +11,9 @@
     <div class="background-frame"></div>
 
     <div class="background-image default" id="default-bg"></div>
-    <div class="background-image focus" id="focus-bg"></div>
-    <div class="background-image presence" id="presence-bg"></div>
-    <div class="background-image feel" id="feel-bg"></div>
+    <div class="background-image server" id="server-bg"></div>
+    <div class="background-image dev" id="dev-bg"></div>
+    <div class="background-image angaj" id="angaj-bg"></div>
 
     <div class="bottom-gradient"></div>
 
@@ -54,7 +54,7 @@
         <div class="text-item" style="top: 50%; left: 5%;" data-text="EMBRACE SILENCE">EMBRACE SILENCE</div>
         <div class="text-item" style="top: 50%; right: 5%;" data-text="QUESTION EVERYTHING">QUESTION EVERYTHING</div>
 
-        <div class="text-item" style="top: 75%; left: 20%;" data-text="TRUTH">TRUTH</div>
+        <div class="text-item" style="top: 75%; left: 20%;" data-text="NOTTRUTH">NOTTRUTH</div>
         <div class="text-item" style="top: 75%; right: 20%;" data-text="WISDOM">WISDOM</div>
 
         <div class="text-item" style="top: 80%; left: 10%;" data-text="FOCUS">FOCUS</div>
@@ -69,22 +69,32 @@
     <div class="main-content">
         <div class="sliced-container">
             <!-- Names of containers will be focus  presence and feel -->
-            <div class="text-row" data-row-id="focus">
-                <div class="text-content" data-text="FOCUS">FOCUS</div>
-                <div class="interactive-area"></div>
-            </div>
+            <a href="https://server.angaj.org">
+                <div class="text-row" data-row-id="server">
+                    <div class="text-content" data-text="SERVER">.SErVER</div> <!-- font spacing issue -->
+                    <div class="interactive-area"></div>
+                </div>
+            </a>
 
-            <div class="text-row" data-row-id="presence">
-                <div class="text-content" data-text="PRESENCE">PRESENCE</div>
-                <div class="interactive-area"></div>
-            </div>
+            <a href="home.html#rankings">
+                <div class="text-row" data-row-id="dev">
+                    <div class="text-content" data-text=".DEV">.DEV</div>
+                    <div class="interactive-area"></div>
+                </div>
+            </a>
 
-            <div class="text-row" data-row-id="feel">
-                <div class="text-content" data-text="ANGAJ">ANGAJ</div>
-                <div class="interactive-area"></div>
-            </div>
+            <a href="home.html">
+                <div class="text-row" data-row-id="angaj">
+                    <div class="text-content" data-text="ANGAJ">.ANGAJ</div>
+                    <div class="interactive-area"></div>
+                </div>
+            </a>
+        </div>
+        <div class="hover-prompt">
+            Hover for context. Click to enter.
         </div>
     </div>
+
 
     <div class="type" id="kinetic-type" aria-hidden="true">
         <div class="type-line odd">focus focus focus</div>
