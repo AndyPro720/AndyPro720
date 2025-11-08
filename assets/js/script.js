@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
       default: document.getElementById("default-bg"),
       server: document.getElementById("server-bg"),
       dev: document.getElementById("dev-bg"),
-      angaj: document.getElementById("angaj-bg")
+      home: document.getElementById("home-bg")
     };
     
     // --- DEFINE PROMPT & TEXTROWS HERE ---
@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
         SIMPLIFY: "STREAMLINE",
         REFINE: "OPTIMIZE"
       },
-      angaj: {
+      home: {
         BE: "SEE",
         PRESENT: "FOCUSED",
         LISTEN: "UNDERSTAND",
@@ -1004,7 +1004,7 @@ document.addEventListener("DOMContentLoaded", function () {
               e.preventDefault();
               serverClickHandler(e, row); // Run server check
             } else {
-              // Normal navigation for DEV and ANGAJ
+              // Normal navigation for DEV and home
               const href = row.href;
               if (!href) {
                 console.error("Link has no href attribute:", row);
@@ -1045,7 +1045,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (rowId === 'server') {
             row.addEventListener('click', (e) => serverClickHandler(e, row));
         }
-        // "DEV" and "ANGAJ" links work as normal <a> tags on click.
+        // "DEV" and "home" links work as normal <a> tags on click.
       }
     });
 
