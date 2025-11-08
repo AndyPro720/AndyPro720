@@ -99,7 +99,7 @@ body {
 .hover-prompt {
   margin-top: 0.2rem; /* Creates space below "angaj" */
   text-align: center; /* Ensures it's centered */
-  color: #ffa600e6;
+   color : #6a5acd; /* Indigo */
   font-weight: bold;
   opacity: 0.5;
   font-family: "TheGoodMonolith", monospace;
