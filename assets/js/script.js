@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
       Object.values(backgroundImages).forEach((bg) => {
         gsap.to(bg, {
           opacity: 0,
-          duration: 0.8,
+          duration: 0.4, // Faster bg fade
           ease: "customEase"
         });
       });
@@ -42,16 +42,16 @@ document.addEventListener("DOMContentLoaded", function () {
       if (backgroundImages[id]) {
         gsap.to(backgroundImages[id], {
           opacity: 1,
-          duration: 0.8,
+          duration: 0.4,
           ease: "customEase",
-          delay: 0.2
+          delay: 0.1
         });
       } else {
         gsap.to(backgroundImages.default, {
           opacity: 1,
-          duration: 0.8,
+          duration: 0.4,
           ease: "customEase",
-          delay: 0.2
+          delay: 0.1
         });
       }
     }
@@ -844,7 +844,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Add a global function to manually test the animation
-    window.testKineticAnimation = function (rowId) {
+   /*  window.testKineticAnimation = function (rowId) {
       const row = document.querySelector(`.text-row[data-row-id="${rowId}"]`);
       if (row) {
         activateRow(row);
@@ -852,7 +852,7 @@ document.addEventListener("DOMContentLoaded", function () {
           deactivateRow(row);
         }, 3000);
       }
-    };
+    }; */
 
     function scrambleRandomText() {
       const randomIndex = Math.floor(
@@ -918,10 +918,10 @@ document.addEventListener("DOMContentLoaded", function () {
         z-index: 200 !important;
         display: grid !important;
         visibility: visible !important;
-        opacity: 1;
+        opacity: 0.0; 
         pointer-events: none;
       }
-    `;
+    `;//hidden for now
     document.head.appendChild(style);
   }
 });

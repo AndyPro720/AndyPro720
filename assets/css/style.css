@@ -66,24 +66,21 @@ body {
   opacity: 0;
   z-index: 1;
   mix-blend-mode: multiply;
-  transition: opacity 0.8s ease-in-out;
+  transition: opacity 0.7s ease-in-out;
 }
 
-.background-image.default {
-  background-image: url("https://assets.codepen.io/7558/wave-bg-001.webp");
+#default-bg {
+  background-image: url("/assets/images/default-bg.jpg");
   opacity: 1;
 }
-
-.background-image.server {
-  background-image: url("https://assets.codepen.io/7558/wave-bg-002.webp");
+#server-bg {
+  background-image: url("/assets/images/server-bg.jpg");
 }
-
-.background-image.dev {
-  background-image: url("https://assets.codepen.io/7558/wave-bg-003.webp");
+#dev-bg {
+  background-image: url("/assets/images/dev-bg.jpg");
 }
-
-.background-image.angaj {
-  background-image: url("https://assets.codepen.io/7558/wave-bg-004.webp");
+#angaj-bg {
+  background-image: url("/assets/images/default-bg1.jpg");
 }
 
 .text-background {
