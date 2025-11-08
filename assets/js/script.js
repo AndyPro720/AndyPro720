@@ -29,6 +29,25 @@ document.addEventListener("DOMContentLoaded", function () {
       yoyo: true,
       ease: "sine.inOut"
     });
+    
+    const promptLink = document.querySelector(".hover-prompt-link");
+    const allTextRows = document.querySelectorAll(".text-row");
+
+    if (promptLink && allTextRows.length > 0) {
+      promptLink.addEventListener("click", (e) => {
+        // 1. Prevent the button from navigating
+        e.preventDefault();
+
+        // 2. Animate the borders of all three links
+        gsap.to(allTextRows, {
+          borderColor: "var(--text)", // Flash to your yellow color
+          duration: 0.2,            // Very fast
+          stagger: 0.1,             // Animate one after another
+          repeat: 1,                // Play forward and...
+          yoyo: true                // ...play in reverse (fades back to transparent)
+        });
+      });
+    }
 
     function switchBackgroundImage(id) {
       Object.values(backgroundImages).forEach((bg) => {
