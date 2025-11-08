@@ -1,7 +1,3 @@
-// TODO: Fix mobile/touch optimization for better experience on touch devices
-// TODO: Interactive area was removed due to issues with the middle title element and overall elements overlaping and causing sequence cancellation
-// TODO: Fix issue where the text is not returning to initial position when quickly hovering
-
 gsap.registerPlugin(CustomEase, SplitText, ScrambleTextPlugin);
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -21,14 +17,20 @@ document.addEventListener("DOMContentLoaded", function () {
       angaj: document.getElementById("angaj-bg")
     };
     
-    // Makes the new prompt pulse gently
-    gsap.to(".hover-prompt", {
-      opacity: 1,
-      duration: 2.5,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut"
-    });
+    // --- DEFINE PROMPT & TEXTROWS HERE ---
+  const promptElement = document.querySelector('.hover-prompt');
+  let originalPromptText = promptElement ? promptElement.textContent : "Hover for context. Click to enter.";
+  const textRows = document.querySelectorAll(".text-row"); // textRows is now defined here
+
+  // Makes the new prompt pulse gently
+  const promptPulse = gsap.to(".hover-prompt", {
+    opacity: 1,
+    duration: 2.5,
+    repeat: -1,
+    yoyo: true,
+    ease: "sine.inOut"
+  });
+    
     
     const promptLink = document.querySelector(".hover-prompt-link");
     const allTextRows = document.querySelectorAll(".text-row");
@@ -221,7 +223,6 @@ document.addEventListener("DOMContentLoaded", function () {
       transitionInProgress: false // 1. Re-enabled this state
     };
 
-    const textRows = document.querySelectorAll(".text-row");
     const splitTexts = {};
 
     textRows.forEach((row, index) => {
@@ -484,6 +485,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function transitionBetweenRows(fromRow, toRow) {
+      if (fromRow.dataset.rowId === 'server') resetPrompt();
       state.transitionInProgress = true; // Set flag
 
       const fromRowId = fromRow.dataset.rowId;
@@ -692,6 +694,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     } 
     function deactivateRow(row) {
+      if (state.activeRowId === 'server') resetPrompt(); // Reset prompt if 'server' is not in focus
       const rowId = row.dataset.rowId;
       if (state.activeRowId !== rowId) return;
 
@@ -819,87 +822,8 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    // 2. DELETED the old, conflicting event listener block that was here
-    /* ... OLD BLOCK REMOVED ... */
 
-    // --- This is the START of the correct, single event listener block ---
-    // 1. Detect if it's a touch device
-    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    
-    // 2. Get the prompt element and change its text
-    const promptElement = document.querySelector('.hover-prompt');
-    if (promptElement) { // Add null check for safety
-      if (isTouchDevice) {
-        promptElement.textContent = "Tap for context. Tap again to enter.";
-      } else {
-        promptElement.textContent = "Hover for context. Click to enter.";
-      }
-    }
-
-    // 3. Apply event listeners based on device
-    textRows.forEach((row) => {
-      if (isTouchDevice) {
-        // --- NEW TOUCH LOGIC (Tap to toggle, tap again to go) ---
-        row.addEventListener('click', (e) => {
-          e.preventDefault();
-          const rowId = row.dataset.rowId;
-
-          if (state.activeRowId === rowId) {
-            // SECOND TAP: Navigate
-            const href = row.href;
-            if (!href) {
-              console.error("Link has no href attribute:", row);
-              return;
-            }
-            if (row.target === '_blank') {
-              window.open(href, '_blank', 'noopener,noreferrer');
-            } else {
-              window.location.href = href;
-            }
-          } else {
-            // FIRST TAP: Activate
-            const activeRow = document.querySelector(".text-row.active");
-            if (activeRow) {
-              transitionBetweenRows(activeRow, row);
-            } else {
-              activateRow(row);
-            }
-          }
-        });
-      } else {
-        // --- DESKTOP: Hover for context, click for link ---
-        const interactiveArea = row.querySelector(".interactive-area");
-        if (interactiveArea) { // Add null check for safety
-          interactiveArea.addEventListener("mouseenter", () => {
-            activateRow(row);
-          });
-          interactiveArea.addEventListener("mouseleave", () => {
-            if (state.activeRowId === row.dataset.rowId) {
-              deactivateRow(row);
-            }
-          });
-        }
-        // No click listener needed for desktop, the <a> tag works normally.
-      }
-    });
-
-    // 4. Add "tap outside to close" listener for touch devices
-    if (isTouchDevice) {
-      // 3. Switched from 'click' to 'touchstart'
-      document.addEventListener('touchstart', (e) => {
-        if (!state.activeRowId) return;
-        if (e.target.closest('.text-row')) {
-          return;
-        }
-        const activeRow = document.querySelector(".text-row.active");
-        if (activeRow) {
-          deactivateRow(activeRow);
-        }
-      }, { passive: true }); // Added passive for performance
-    }
-    // --- END: NEW EVENT LISTENER BLOCK ---
-
-    function scrambleRandomText() {
+      function scrambleRandomText() {
       if (backgroundTextItems.length === 0) return; // Add safety check
       const randomIndex = Math.floor(
         Math.random() * backgroundTextItems.length
@@ -969,5 +893,176 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     `;
     document.head.appendChild(style);
+  
+  async function checkVpn() {
+    // This controller will let us cancel the request after 2 seconds
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+    try {
+      // We try to fetch your server. 
+      // 'no-cors' mode is important. We don't need to read the response,
+      // we just need to see if the server is reachable.
+      await fetch('https://server.angaj.org', {
+        signal: controller.signal,
+        mode: 'no-cors'
+      });
+      
+      // If we get here, the request succeeded.
+      clearTimeout(timeoutId);
+      return true;
+    } catch (error) {
+      // If we get here, the request failed (timeout or network error)
+      clearTimeout(timeoutId);
+      return false;
+    }
+  }
+  // --- ADD THIS NEW HELPER FUNCTION ---
+  function resetPrompt() {
+    if (!promptElement) return;
+    gsap.killTweensOf(promptElement); // Stop any error animations
+    gsap.set(promptElement, { 
+      textContent: originalPromptText,
+      color: "", // Resets to default CSS color
+      x: 0 
+    });
+    promptPulse.restart(); // Restart the default pulse
+  }
+  
+  async function serverClickHandler(e) {
+    e.preventDefault(); // Stop the link
+    const row = e.currentTarget; //store link for redirection later
+
+    // 1. Start the VPN check IN THE BACKGROUND
+    // We don't await it yet.
+    const vpnCheckPromise = checkVpn();
+
+    // 2. Play the "Access restricted" animation
+    promptPulse.pause();
+    gsap.killTweensOf(promptElement);
+    gsap.timeline()
+      .set(promptElement, { 
+        textContent: "Access restricted to private network; checking...", 
+        color: "#00ffc8ff", // Orange color
+        x: 0 
+      })
+      .to(promptElement, { x: "+=5", duration: 0.05, yoyo: true, repeat: 5 })
+      .set(promptElement, { x: 0 });
+
+    // 3. After 3 seconds, check the result and show final status
+    setTimeout(async () => {
+      // Now we await the result
+      const isOnVpn = await vpnCheckPromise;
+      
+      if (isOnVpn) {
+        gsap.set(promptElement, { textContent: "Success! Redirecting...", color: "#39FF14" });
+        // User request: delay navigation by 1 second
+        setTimeout(() => {
+          if (row.target === '_blank') {
+            window.open(row.href, '_blank', 'noopener,noreferrer');
+          } else {
+            window.location.href = row.href;
+          }
+        }, 1000);
+      } else {
+        // Failure
+        gsap.set(promptElement, { textContent: "Access Denied. VPN not detected.", color: "red" });
+        // Reset the prompt after 5 seconds
+        setTimeout(resetPrompt, 5000);
+      }
+    }, 3000); // 3-second delay for the "Access restricted" message
+  }
+ 
+// --- START: NEW EVENT LISTENER BLOCK ---
+
+    // 1. Detect if it's a touch device
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    
+    // 2. Get the prompt element and change its text
+    if (promptElement) { // Add null check for safety
+      if (isTouchDevice) {
+        promptElement.textContent = "Tap for context. Tap again to enter.";
+      } else {
+        promptElement.textContent = "Hover for context. Click to enter.";
+      }
+      originalPromptText = promptElement.textContent; // This is now correct (using let)
+    }
+
+    // 3. Apply event listeners based on device
+    textRows.forEach((row) => {
+      const rowId = row.dataset.rowId; // Get rowId once
+
+      if (isTouchDevice) {
+        // --- YOUR TOUCH LOGIC (Tap to toggle, tap again to go) ---
+        row.addEventListener('click', (e) => {
+
+          if (state.activeRowId === rowId) {
+            // --- SECOND TAP: Navigate ---
+            
+            // Check if it's the server link
+            if (rowId === 'server') {
+              e.preventDefault();
+              serverClickHandler(e, row); // Run server check
+            } else {
+              // Normal navigation for DEV and ANGAJ
+              const href = row.href;
+              if (!href) {
+                console.error("Link has no href attribute:", row);
+                return;
+              }
+              if (row.target === '_blank') {
+                window.open(href, '_blank', 'noopener,noreferrer');
+              } else {
+                window.location.href = href;
+              }
+            }
+          } else {
+            // --- FIRST TAP: Activate ---
+            e.preventDefault(); //prevent first tap from navigating
+            const activeRow = document.querySelector(".text-row.active");
+            if (activeRow) {
+              transitionBetweenRows(activeRow, row);
+            } else {
+              activateRow(row);
+            }
+          }
+        });
+      } else {
+        // --- DESKTOP: Hover for context, click for link ---
+        const interactiveArea = row.querySelector(".interactive-area");
+        if (interactiveArea) { // Add null check for safety
+          interactiveArea.addEventListener("mouseenter", () => {
+            activateRow(row);
+          });
+          interactiveArea.addEventListener("mouseleave", () => {
+            if (state.activeRowId === row.dataset.rowId) {
+              deactivateRow(row);
+            }
+          });
+        }
+        
+        // Add server check only to server link
+        if (rowId === 'server') {
+            row.addEventListener('click', (e) => serverClickHandler(e, row));
+        }
+        // "DEV" and "ANGAJ" links work as normal <a> tags on click.
+      }
+    });
+
+    // 4. Add "tap outside to close" listener for touch devices
+    if (isTouchDevice) {
+      document.addEventListener('touchstart', (e) => {
+        if (!state.activeRowId) return;
+        if (e.target.closest('.text-row')) {
+          return;
+        }
+        const activeRow = document.querySelector(".text-row.active");
+        if (activeRow) {
+          deactivateRow(activeRow);
+        }
+      }, { passive: true }); // Added passive for performance
+    }
+    // --- END: NEW EVENT LISTENER BLOCK --- 
+
   }
 });
