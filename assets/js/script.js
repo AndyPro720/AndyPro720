@@ -32,11 +32,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function switchBackgroundImage(id) {
       Object.values(backgroundImages).forEach((bg) => {
-        gsap.to(bg, {
-          opacity: 0,
-          duration: 0.4, // Faster bg fade
-          ease: "customEase"
-        });
+        if (bg) { // Add null check for safety
+          gsap.to(bg, {
+            opacity: 0,
+            duration: 0.4,
+            ease: "customEase"
+          });
+        }
       });
 
       if (backgroundImages[id]) {
@@ -46,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
           ease: "customEase",
           delay: 0.1
         });
-      } else {
+      } else if (backgroundImages.default) {
         gsap.to(backgroundImages.default, {
           opacity: 1,
           duration: 0.4,
@@ -176,8 +178,6 @@ document.addEventListener("DOMContentLoaded", function () {
     backgroundTextItems.forEach((item) => {
       item.dataset.originalText = item.textContent;
       item.dataset.text = item.textContent;
-
-      // Make background text fully opaque by default
       gsap.set(item, { opacity: 1 });
     });
 
@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
       kineticAnimationActive: false,
       activeKineticAnimation: null,
       textRevealAnimation: null,
-      transitionInProgress: false // New state to track transitions
+      transitionInProgress: false // 1. Re-enabled this state
     };
 
     const textRows = document.querySelectorAll(".text-row");
@@ -336,13 +336,12 @@ document.addEventListener("DOMContentLoaded", function () {
       const kineticType = document.getElementById("kinetic-type");
       gsap.killTweensOf([kineticType, typeLines, oddLines, evenLines]);
 
-      // FIXED: Always ensure kinetic type is visible and properly set up
       gsap.set(kineticType, {
         display: "grid",
         scale: 1,
         rotation: 0,
-        opacity: 1,
-        visibility: "visible" // Added visibility property
+        // opacity: 1, // This is handled by the JS-injected style
+        visibility: "visible"
       });
 
       gsap.set(typeLines, {
@@ -354,14 +353,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function startKineticAnimation(text) {
-      // First ensure any existing animation is properly cleaned up
       forceResetKineticAnimation();
 
       const kineticType = document.getElementById("kinetic-type");
 
-      // FIXED: Explicitly ensure the element is visible with inline styles
       kineticType.style.display = "grid";
-      kineticType.style.opacity = "1";
+      // kineticType.style.opacity = "1"; // Let GSAP handle opacity
       kineticType.style.visibility = "visible";
 
       const repeatedText = `${text} ${text} ${text}`;
@@ -370,20 +367,26 @@ document.addEventListener("DOMContentLoaded", function () {
         line.textContent = repeatedText;
       });
 
-      // FIXED: Add a small delay before starting animation to ensure element is visible
       setTimeout(() => {
         const timeline = gsap.timeline({
           onComplete: () => {
             state.kineticAnimationActive = false;
           }
         });
+      
+        // Also fade in the main container
+        timeline.to(kineticType, {
+          opacity: 1,
+          duration: 1,
+          ease: "customEase"
+        }, 0);
 
         timeline.to(kineticType, {
           duration: 1.4,
           ease: "customEase",
           scale: 2.7,
           rotation: -90
-        });
+        }, 0); // Run at the same time as opacity fade-in
 
         timeline.to(
           oddLines,
@@ -423,7 +426,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         state.kineticAnimationActive = true;
         state.activeKineticAnimation = timeline;
-      }, 20); // Small delay to ensure DOM updates
+      }, 20);
     }
 
     function fadeOutKineticAnimation() {
@@ -436,14 +439,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const kineticType = document.getElementById("kinetic-type");
 
-      // FIXED: Don't set display to none on fadeout completion
       const fadeOutTimeline = gsap.timeline({
         onComplete: () => {
           gsap.set(kineticType, {
             scale: 1,
-            rotation: 0,
-            opacity: 1
-            // Removed setting display: none
+            rotation: 0
+            // Opacity is reset by the JS-injected style
           });
 
           gsap.set(typeLines, {
@@ -456,70 +457,57 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       fadeOutTimeline.to(kineticType, {
-        opacity: 0,
+        opacity: 0, // This will fade to 0, overriding the JS-injected style
         scale: 0.8,
         duration: 0.5,
         ease: "customEase"
       });
     }
 
-    // FIXED: New function to handle transitions between rows
     function transitionBetweenRows(fromRow, toRow) {
-      if (state.transitionInProgress) return;
-
-      state.transitionInProgress = true;
+      state.transitionInProgress = true; // Set flag
 
       const fromRowId = fromRow.dataset.rowId;
       const toRowId = toRow.dataset.rowId;
 
-      // 1. Clean up the previous row
       fromRow.classList.remove("active");
       const fromChars = splitTexts[fromRowId].chars;
       const fromInners = fromRow.querySelectorAll(".char-inner");
-
       gsap.killTweensOf(fromChars);
       gsap.killTweensOf(fromInners);
 
-      // 2. Update state and prepare new row
       toRow.classList.add("active");
       state.activeRowId = toRowId;
 
       const toText = toRow.querySelector(".text-content").dataset.text;
-      const toChars = splitTexts[toRowId].chars;
-      const toInners = toRow.querySelectorAll(".char-inner");
+      const toCharsToAnimate = splitTexts[toRowId].chars.slice(1);
+      const toInnersToAnimate = Array.from(
+        toRow.querySelectorAll(".char-inner")
+      ).slice(1);
 
-      // 3. Force reset kinetic animation (don't fade out, just reset)
       forceResetKineticAnimation();
-
-      // 4. Update background
       switchBackgroundImage(toRowId);
-
-      // 5. Start new animations
       startKineticAnimation(toText);
-
       if (state.textRevealAnimation) {
         state.textRevealAnimation.kill();
       }
       state.textRevealAnimation = createTextRevealAnimation(toRowId);
 
-      // 6. Reset the previous row instantly
       gsap.set(fromChars, {
         maxWidth: (i, target) => parseFloat(target.dataset.charWidth)
       });
-
       gsap.set(fromInners, {
         x: 0
       });
 
-      // 7. Animate the new row
       const timeline = gsap.timeline({
         onComplete: () => {
-          state.transitionInProgress = false;
+          state.transitionInProgress = false; // Unset flag
         }
       });
 
       timeline.to(
-        toChars,
+        toCharsToAnimate,
         {
           maxWidth: (i, target) => parseFloat(target.dataset.hoverWidth),
           duration: 0.64,
@@ -530,7 +518,7 @@ document.addEventListener("DOMContentLoaded", function () {
       );
 
       timeline.to(
-        toInners,
+        toInnersToAnimate,
         {
           x: -35,
           duration: 0.64,
@@ -539,24 +527,20 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         0.05
       );
-    }
+    } 
 
     function createTextRevealAnimation(rowId) {
       const timeline = gsap.timeline();
-
-      // Fade out other background text items
       timeline.to(backgroundTextItems, {
         opacity: 0.3,
         duration: 0.5,
         ease: "customEase"
       });
-
       timeline.call(() => {
         backgroundTextItems.forEach((item) => {
           item.classList.add("highlight");
         });
       });
-
       timeline.call(
         () => {
           backgroundTextItems.forEach((item) => {
@@ -572,14 +556,12 @@ document.addEventListener("DOMContentLoaded", function () {
         null,
         "+=0.5"
       );
-
       timeline.call(() => {
         backgroundTextItems.forEach((item) => {
           item.classList.remove("highlight");
           item.classList.add("highlight-reverse");
         });
       });
-
       timeline.call(
         () => {
           backgroundTextItems.forEach((item) => {
@@ -589,19 +571,16 @@ document.addEventListener("DOMContentLoaded", function () {
         null,
         "+=0.5"
       );
-
       return timeline;
     }
 
     function resetBackgroundTextWithAnimation() {
       const timeline = gsap.timeline();
-
       timeline.call(() => {
         backgroundTextItems.forEach((item) => {
           item.classList.add("highlight");
         });
       });
-
       timeline.call(
         () => {
           backgroundTextItems.forEach((item) => {
@@ -611,14 +590,12 @@ document.addEventListener("DOMContentLoaded", function () {
         null,
         "+=0.5"
       );
-
       timeline.call(() => {
         backgroundTextItems.forEach((item) => {
           item.classList.remove("highlight");
           item.classList.add("highlight-reverse");
         });
       });
-
       timeline.call(
         () => {
           backgroundTextItems.forEach((item) => {
@@ -628,41 +605,35 @@ document.addEventListener("DOMContentLoaded", function () {
         null,
         "+=0.5"
       );
-
-      // Restore full opacity to all background text items
       timeline.to(backgroundTextItems, {
         opacity: 1,
         duration: 0.5,
         ease: "customEase"
       });
-
       return timeline;
     }
 
-    // FIXED: Modified activateRow function to use the transition function
     function activateRow(row) {
       const rowId = row.dataset.rowId;
-
-      // If already active, do nothing
       if (state.activeRowId === rowId) return;
 
-      // If a transition is already in progress, don't start another one
-      if (state.transitionInProgress) return;
+      // 1. Add check
+      if (state.transitionInProgress) return; 
 
-      // Check if there's already an active row
       const activeRow = document.querySelector(".text-row.active");
 
       if (activeRow) {
-        // Use the transition function to switch between rows
         transitionBetweenRows(activeRow, row);
       } else {
-        // No active row, just activate this one normally
+        state.transitionInProgress = true; // 1. Set flag
         row.classList.add("active");
         state.activeRowId = rowId;
 
         const text = row.querySelector(".text-content").dataset.text;
-        const chars = splitTexts[rowId].chars;
-        const innerSpans = row.querySelectorAll(".char-inner");
+        const charsToAnimate = splitTexts[rowId].chars.slice(1);
+        const innersToAnimate = Array.from(
+          row.querySelectorAll(".char-inner")
+        ).slice(1);
 
         switchBackgroundImage(rowId);
         startKineticAnimation(text);
@@ -672,11 +643,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         state.textRevealAnimation = createTextRevealAnimation(rowId);
 
-        // Simplified animation without mouse move effects
-        const timeline = gsap.timeline();
+        const timeline = gsap.timeline({
+          onComplete: () => {
+            state.transitionInProgress = false; // 1. Unset flag
+          }
+        });
 
         timeline.to(
-          chars,
+          charsToAnimate,
           {
             maxWidth: (i, target) => parseFloat(target.dataset.hoverWidth),
             duration: 0.64,
@@ -687,7 +661,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         timeline.to(
-          innerSpans,
+          innersToAnimate,
           {
             x: -35,
             duration: 0.64,
@@ -697,16 +671,15 @@ document.addEventListener("DOMContentLoaded", function () {
           0.05
         );
       }
-    }
-
+    } 
     function deactivateRow(row) {
       const rowId = row.dataset.rowId;
-
       if (state.activeRowId !== rowId) return;
 
-      // If a transition is already in progress, don't interfere
-      if (state.transitionInProgress) return;
-
+      // 1. Add check
+      if (state.transitionInProgress) return; 
+      
+      state.transitionInProgress = true; // 1. Set flag
       state.activeRowId = null;
       row.classList.remove("active");
 
@@ -718,13 +691,22 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       state.textRevealAnimation = resetBackgroundTextWithAnimation();
 
-      const chars = splitTexts[rowId].chars;
-      const innerSpans = row.querySelectorAll(".char-inner");
+      const charsToAnimate = splitTexts[rowId].chars.slice(1);
+      const innersToAnimate = Array.from(
+        row.querySelectorAll(".char-inner")
+      ).slice(1);
 
-      const timeline = gsap.timeline();
+      // Add killTweensOf to prevent race condition on quick hover
+      gsap.killTweensOf([charsToAnimate, innersToAnimate]);
+
+      const timeline = gsap.timeline({
+        onComplete: () => {
+          state.transitionInProgress = false; // 1. Unset flag
+        }
+      });
 
       timeline.to(
-        innerSpans,
+        innersToAnimate,
         {
           x: 0,
           duration: 0.64,
@@ -735,7 +717,7 @@ document.addEventListener("DOMContentLoaded", function () {
       );
 
       timeline.to(
-        chars,
+        charsToAnimate,
         {
           maxWidth: (i, target) => parseFloat(target.dataset.charWidth),
           duration: 0.64,
@@ -750,14 +732,13 @@ document.addEventListener("DOMContentLoaded", function () {
       const container = document.querySelector("body");
       const backgroundElements = [
         ...document.querySelectorAll("[id$='-bg']"),
-        ...document.querySelectorAll(".bg-text-container")
+        ...document.querySelectorAll(".bg-text-container") 
       ];
 
       const parallaxLayers = [0.02, 0.03, 0.04, 0.05];
       backgroundElements.forEach((el, index) => {
         el.dataset.parallaxSpeed =
           parallaxLayers[index % parallaxLayers.length];
-
         gsap.set(el, {
           transformOrigin: "center center",
           force3D: true
@@ -779,14 +760,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         backgroundElements.forEach((el) => {
           const speed = parseFloat(el.dataset.parallaxSpeed);
-
           if (el.id && el.id.endsWith("-bg") && el.style.opacity === "0") {
             return;
           }
-
           const moveX = offsetX * 100 * speed;
           const moveY = offsetY * 50 * speed;
-
           gsap.to(el, {
             x: moveX,
             y: moveY,
@@ -811,50 +789,99 @@ document.addEventListener("DOMContentLoaded", function () {
       backgroundElements.forEach((el, index) => {
         const delay = index * 0.2;
         const floatAmount = 5 + (index % 3) * 2;
-
         gsap.to(el, {
           y: `+=${floatAmount}`,
           duration: 3 + (index % 2),
           ease: "sine.inOut",
           repeat: -1,
-          yoyo: true,
+          yoyo: true, 
           delay: delay
         });
       });
     }
 
-    // Keep the event listeners but remove the mouse move functionality
+    // 2. DELETED the old, conflicting event listener block that was here
+    /* ... OLD BLOCK REMOVED ... */
+
+    // --- This is the START of the correct, single event listener block ---
+    // 1. Detect if it's a touch device
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    
+    // 2. Get the prompt element and change its text
+    const promptElement = document.querySelector('.hover-prompt');
+    if (promptElement) { // Add null check for safety
+      if (isTouchDevice) {
+        promptElement.textContent = "Tap for context. Tap again to enter.";
+      } else {
+        promptElement.textContent = "Hover for context. Click to enter.";
+      }
+    }
+
+    // 3. Apply event listeners based on device
     textRows.forEach((row) => {
-      const interactiveArea = row.querySelector(".interactive-area");
+      if (isTouchDevice) {
+        // --- NEW TOUCH LOGIC (Tap to toggle, tap again to go) ---
+        row.addEventListener('click', (e) => {
+          e.preventDefault();
+          const rowId = row.dataset.rowId;
 
-      interactiveArea.addEventListener("mouseenter", () => {
-        activateRow(row);
-      });
-
-      interactiveArea.addEventListener("mouseleave", () => {
-        if (state.activeRowId === row.dataset.rowId) {
-          deactivateRow(row);
+          if (state.activeRowId === rowId) {
+            // SECOND TAP: Navigate
+            const href = row.href;
+            if (!href) {
+              console.error("Link has no href attribute:", row);
+              return;
+            }
+            if (row.target === '_blank') {
+              window.open(href, '_blank', 'noopener,noreferrer');
+            } else {
+              window.location.href = href;
+            }
+          } else {
+            // FIRST TAP: Activate
+            const activeRow = document.querySelector(".text-row.active");
+            if (activeRow) {
+              transitionBetweenRows(activeRow, row);
+            } else {
+              activateRow(row);
+            }
+          }
+        });
+      } else {
+        // --- DESKTOP: Hover for context, click for link ---
+        const interactiveArea = row.querySelector(".interactive-area");
+        if (interactiveArea) { // Add null check for safety
+          interactiveArea.addEventListener("mouseenter", () => {
+            activateRow(row);
+          });
+          interactiveArea.addEventListener("mouseleave", () => {
+            if (state.activeRowId === row.dataset.rowId) {
+              deactivateRow(row);
+            }
+          });
         }
-      });
-
-      // Add click event as a backup for mouseenter
-      row.addEventListener("click", () => {
-        activateRow(row);
-      });
+        // No click listener needed for desktop, the <a> tag works normally.
+      }
     });
 
-    // Add a global function to manually test the animation
-   /*  window.testKineticAnimation = function (rowId) {
-      const row = document.querySelector(`.text-row[data-row-id="${rowId}"]`);
-      if (row) {
-        activateRow(row);
-        setTimeout(() => {
-          deactivateRow(row);
-        }, 3000);
-      }
-    }; */
+    // 4. Add "tap outside to close" listener for touch devices
+    if (isTouchDevice) {
+      // 3. Switched from 'click' to 'touchstart'
+      document.addEventListener('touchstart', (e) => {
+        if (!state.activeRowId) return;
+        if (e.target.closest('.text-row')) {
+          return;
+        }
+        const activeRow = document.querySelector(".text-row.active");
+        if (activeRow) {
+          deactivateRow(activeRow);
+        }
+      }, { passive: true }); // Added passive for performance
+    }
+    // --- END: NEW EVENT LISTENER BLOCK ---
 
     function scrambleRandomText() {
+      if (backgroundTextItems.length === 0) return; // Add safety check
       const randomIndex = Math.floor(
         Math.random() * backgroundTextItems.length
       );
@@ -911,17 +938,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     initializeParallax();
 
-    // FIXED: Add stronger CSS rules to ensure kinetic type is visible
+    // 4. Modified this to respect your TYPE_LINE_OPACITY variable
     const style = document.createElement("style");
     style.textContent = `
       #kinetic-type {
         z-index: 200 !important;
         display: grid !important;
         visibility: visible !important;
-        opacity: 0.0; 
+        opacity: ${TYPE_LINE_OPACITY}; 
         pointer-events: none;
       }
-    `;//hidden for now
+    `;
     document.head.appendChild(style);
   }
 });
