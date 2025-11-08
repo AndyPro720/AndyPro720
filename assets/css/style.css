@@ -97,11 +97,10 @@ body {
 }
 
 .hover-prompt {
-  margin-top: 0.5rem; /* Creates space below "angaj" */
+  margin-top: 0.2rem; /* Creates space below "angaj" */
   text-align: center; /* Ensures it's centered */
-  
-  /* --- KEPT --- */
-  color: var(--text);
+  color: #ffa600e6;
+  font-weight: bold;
   opacity: 0.5;
   font-family: "TheGoodMonolith", monospace;
   font-size: 0.8rem;
@@ -175,6 +174,7 @@ body {
 .text-content,
 .char,
 .char-inner {
+  color: #ffa600e6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
