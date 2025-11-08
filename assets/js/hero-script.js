@@ -51,12 +51,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 // Pull back to home position
-                this.vx += (this.homeX - this.x) * 0.05;
-                this.vy += (this.homeY - this.y) * 0.05;
+                this.vx += (this.homeX - this.x) * 0.07;
+                this.vy += (this.homeY - this.y) * 0.07;
                 
-                // Apply friction
-                this.vx *= 0.95;
-                this.vy *= 0.95;
+                // Apply friction and adjust bounce back effect
+                this.vx *= 0.85;
+                this.vy *= 0.85;
 
                 // Update position
                 this.x += this.vx;
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (canvas.width === 0 || canvas.height === 0) return;
     
     const text1 = "Hey, I'm Angaj!";
-    const text2 = "Web Developer";
+    const text2 = "Tinkerer. Creator. Developer.";
     
     // 1. Set Responsive Font Size
     let fontSize;
@@ -142,26 +142,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let startupAnimationActive = true;
         let startupAnimationProgress = 0;
+        let userHasMoved = false;
+        let lastMouseX = null;
+        let lastMouseY = null;
         
         function simulateMouseMovement() {
             if (!startupAnimationActive) return;
             
-            // Create a natural curved path between the two text lines
-            const progress = startupAnimationProgress / 100;
-            const centerX = canvas.width / 2;
             const fontSize = canvas.width <= 768 ? 40 : canvas.width <= 1200 ? 60 : 80;
-            const y1 = canvas.height / 2 - (fontSize * 0.7);
-            const y2 = canvas.height / 2 + (fontSize * 0.7);
+            const y2 = canvas.height / 2 + (fontSize * 0.4); // Moved higher (was 0.7)
             
-            // Use sine wave for natural movement
-            const curveX = centerX + Math.sin(progress * Math.PI * 2) * 100;
-            const curveY = y1 + (y2 - y1) * progress;
+            // Calculate text position and width
+            const text2 = "Tinkerer. Creator. Developer.";
+            ctx.font = `bold ${fontSize}px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`;
+            const text2Width = ctx.measureText(text2).width;
+            const textX2 = (canvas.width - text2Width) / 2;
             
-            mouse.x = curveX;
-            mouse.y = curveY;
+            // Create a streak that moves across the exact text width
+            const progress = startupAnimationProgress / 100;
             
-            startupAnimationProgress += 0.5;
-            if (startupAnimationProgress >= 200) {
+            // Use text boundaries for animation
+            const startX = textX2 - 100; // Start before text
+            const endX = textX2 + text2Width + 100; // End after text
+            const streakX = startX + (endX - startX) * progress;
+            
+            // Only update mouse position if user hasn't moved
+            if (!userHasMoved) {
+                mouse.x = streakX;
+                mouse.y = y2; // Keep Y position fixed at second line
+            }
+            
+            // Slower, more visible animation
+            startupAnimationProgress += 1.3;
+            if (startupAnimationProgress >= 100) {
                 startupAnimationActive = false;
             }
         }
@@ -181,9 +194,22 @@ document.addEventListener("DOMContentLoaded", () => {
             requestAnimationFrame(animate);
         }
 
-        // Disable startup animation on real mouse movement
-        window.addEventListener('mousemove', () => {
-            startupAnimationActive = false;
+        // Only disable animation when user actually moves the mouse
+        window.addEventListener('mousemove', (e) => {
+            if (lastMouseX === null) {
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                return;
+            }
+            
+            // Check if mouse has moved significantly (more than 5 pixels)
+            if (Math.abs(e.clientX - lastMouseX) > 5 || Math.abs(e.clientY - lastMouseY) > 5) {
+                userHasMoved = true;
+                startupAnimationActive = false;
+            }
+            
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
         });
 
         // Initialize - wait for canvas to be ready
