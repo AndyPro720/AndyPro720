@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const promptPulse = gsap.to(".hover-prompt", {
     opacity: 1,
     duration: 2.5,
-    repeat: -1,
+    repeat: 1,
     yoyo: true,
     ease: "sine.inOut"
   });
@@ -35,21 +35,48 @@ document.addEventListener("DOMContentLoaded", function () {
     const promptLink = document.querySelector(".hover-prompt-link");
     const allTextRows = document.querySelectorAll(".text-row");
 
-    if (promptLink && allTextRows.length > 0) {
-      promptLink.addEventListener("click", (e) => {
-        // 1. Prevent the button from navigating
-        e.preventDefault();
+  let clickCount = 0;
+  
+  // 2. Create your list of hints
+  const hintTexts = [
+    originalPromptText, // State 0
+    "⬆️ Use SERVER, .DEV, or HOME ⬆️", // State 2
+    "Those three big words are the real links. Try one!" // State 3
+  ];
 
-        // 2. Animate the borders of all three links
-        gsap.to(allTextRows, {
-          borderColor: "var(--text)", // Flash to your yellow color
-          duration: 0.2,            // Very fast
-          stagger: 0.1,             // Animate one after another
-          repeat: 1,                // Play forward and...
-          yoyo: true                // ...play in reverse (fades back to transparent)
-        });
+  if (promptLink && allTextRows.length > 0 && promptElement) {
+    promptLink.addEventListener("click", (e) => {
+      // 1. ALWAYS prevent navigation. This button is just a hint.
+      e.preventDefault();
+
+      // 2. Run your border animation
+      gsap.to(allTextRows, {
+        borderColor: "#179fe8ff",
+        duration: 0.8,
+        stagger: 0.1,
+        repeat: 1,
+        yoyo: true
       });
-    }
+      
+      // 3. Increment click counter
+      clickCount++;
+      
+      // 4. Update the text. 
+      // The % (modulo) operator makes it cycle back to the beginning
+      // after the last hint.
+      let hintIndex = clickCount % hintTexts.length;
+      promptElement.textContent = hintTexts[hintIndex];
+      
+      // 5. If you want it to navigate on the 4th click, you can
+      // add this 'if' statement:
+      if (clickCount === 3) {
+         // Optionally, add a delay so they can read the text
+         setTimeout(() => {
+            window.location.href = 'home.html';
+         }, 1000); // 1-second delay
+      }
+    });
+  }
 
     function switchBackgroundImage(id) {
       Object.values(backgroundImages).forEach((bg) => {
