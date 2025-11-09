@@ -14,6 +14,7 @@
   --bg: #000000;
   --highlight-bg: #ffcc00;
   --type-line-opacity: 0.05;
+  font-weight: bold;
 }
 
 a{
@@ -78,7 +79,7 @@ body {
   background-image: url("/assets/images/server-bg.jpg");
 }
 #dev-bg {
-  background-image: url("/assets/images/dev-bg.jpg");
+  background-image: url("/assets/images/dev-bg1.jpg");
 }
 #home-bg {
   background-image: url("/assets/images/home-bg.jpg");
@@ -101,7 +102,7 @@ body {
 
 /* This styles the button box */
 .hover-prompt {
-  color: var(--text);
+  color: rgb(255, 115, 0);
   font-family: "TheGoodMonolith", monospace;
   font-size: 0.9rem;
   font-weight: bold;
