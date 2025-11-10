@@ -130,7 +130,7 @@ body {
   color: var(--text);
   font-size: 0.8rem;
   text-transform: uppercase;
-  opacity: 0.8;
+  opacity: 1.8;
   white-space: nowrap;
   font-family: "TheGoodMonolith", monospace;
   z-index: 0;

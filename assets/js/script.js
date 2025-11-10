@@ -106,122 +106,82 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    const alternativeTexts = {
-      server: {
-        BE: "BECOME",
-        PRESENT: "MINDFUL",
-        LISTEN: "HEAR",
-        DEEPLY: "INTENTLY",
-        OBSERVE: "NOTICE",
-        "&": "+",
-        FEEL: "SENSE",
-        MAKE: "CREATE",
-        BETTER: "IMPROVED",
-        DECISIONS: "CHOICES",
-        THE: "YOUR",
-        CREATIVE: "ARTISTIC",
-        PROCESS: "JOURNEY",
-        IS: "FEELS",
-        MYSTERIOUS: "MAGICAL",
-        S: "START",
-        I: "INSPIRE",
-        M: "MAKE",
-        P: "PURE",
-        L: "LIGHT",
-        C: "CREATE",
-        T: "TRANSFORM",
-        Y: "YOURS",
-        "IS THE KEY": "UNLOCKS ALL",
-        "FIND YOUR VOICE": "SPEAK YOUR TRUTH",
-        "TRUST INTUITION": "FOLLOW INSTINCT",
-        "EMBRACE SILENCE": "WELCOME STILLNESS",
-        "QUESTION EVERYTHING": "CHALLENGE NORMS",
-        TRUTH: "HONESTY",
-        WISDOM: "INSIGHT",
-        FOCUS: "CONCENTRATE",
-        ATTENTION: "AWARENESS",
-        AWARENESS: "CONSCIOUSNESS",
-        PRESENCE: "BEING",
-        SIMPLIFY: "MINIMIZE",
-        REFINE: "PERFECT"
-      },
-      dev: {
-        BE: "EVOLVE",
-        PRESENT: "ENGAGED",
-        LISTEN: "ABSORB",
-        DEEPLY: "FULLY",
-        OBSERVE: "ANALYZE",
-        "&": "→",
-        FEEL: "EXPERIENCE",
-        MAKE: "BUILD",
-        BETTER: "STRONGER",
-        DECISIONS: "SYSTEMS",
-        THE: "EACH",
-        CREATIVE: "ITERATIVE",
-        PROCESS: "METHOD",
-        IS: "BECOMES",
-        MYSTERIOUS: "REVEALING",
-        S: "STRUCTURE",
-        I: "ITERATE",
-        M: "METHOD",
-        P: "PRACTICE",
-        L: "LEARN",
-        C: "CONSTRUCT",
-        T: "TECHNIQUE",
-        Y: "YIELD",
-        "IS THE KEY": "DRIVES SUCCESS",
-        "FIND YOUR VOICE": "DEVELOP YOUR STYLE",
-        "TRUST INTUITION": "FOLLOW THE FLOW",
-        "EMBRACE SILENCE": "VALUE PAUSES",
-        "QUESTION EVERYTHING": "EXAMINE DETAILS",
-        TRUTH: "CLARITY",
-        WISDOM: "KNOWLEDGE",
-        FOCUS: "DIRECTION",
-        ATTENTION: "PRECISION",
-        AWARENESS: "UNDERSTANDING",
-        PRESENCE: "ENGAGEMENT",
-        SIMPLIFY: "STREAMLINE",
-        REFINE: "OPTIMIZE"
-      },
-      home: {
-        BE: "SEE",
-        PRESENT: "FOCUSED",
-        LISTEN: "UNDERSTAND",
-        DEEPLY: "CLEARLY",
-        OBSERVE: "PERCEIVE",
-        "&": "=",
-        FEEL: "KNOW",
-        MAKE: "ACHIEVE",
-        BETTER: "CLEARER",
-        DECISIONS: "VISION",
-        THE: "THIS",
-        CREATIVE: "INSIGHTFUL",
-        PROCESS: "THINKING",
-        IS: "BRINGS",
-        MYSTERIOUS: "ILLUMINATING",
-        S: "SHARP",
-        I: "INSIGHT",
-        M: "MINDFUL",
-        P: "PRECISE",
-        L: "LUCID",
-        C: "CLEAR",
-        T: "TRANSPARENT",
-        Y: "YES",
-        "IS THE KEY": "REVEALS TRUTH",
-        "FIND YOUR VOICE": "DISCOVER YOUR VISION",
-        "TRUST INTUITION": "BELIEVE YOUR EYES",
-        "EMBRACE SILENCE": "SEEK STILLNESS",
-        "QUESTION EVERYTHING": "CLARIFY ASSUMPTIONS",
-        NOTTRUTH: "domain",
-        WISDOM: "PERCEPTION",
-        FOCUS: "CLARITY",
-        ATTENTION: "OBSERVATION",
-        AWARENESS: "RECOGNITION",
-        PRESENCE: "ALERTNESS",
-        SIMPLIFY: "DISTILL",
-        REFINE: "SHARPEN"
-      }
-    };
+  const alternativeTexts = {
+  // --- 1. SERVER HOVER ---
+  server: {
+    "WELCOME TO": "WELCOME TO",
+    "ANGAJ.ORG": "SERVER.ANGAJ.ORG",
+    INSPIRE: "DA-VINCI",
+    FUTURE: "THE MASSES",
+    "✨": "📀",
+    "अंगज": "अंगज.ORG",
+    "KEY": "OPEN-SOURCE",
+    J: "JELLYFIN",
+    A: "API",
+    G: "GIGABIT",
+    N: "NGINX",
+    "A.": "ADC",
+    inception: "INSPIRON-3647",
+    motto: "99.9% UPTIME",
+    "#####": "#RAID1#",
+    "404": "0X194",
+    presence: "IMMICH",
+    OS: "LINUX",
+    "core.": "~/SSH",
+    "reason?": "OWNERSHIP.",
+    愛: "माऊली"
+  },
+  // --- 2. .DEV HOVER ---
+ dev: {
+    "WELCOME TO": "WELCOME TO",
+    "ANGAJ.ORG": "DEV.ANGAJ.ORG",
+    INSPIRE: "FEYNMAN",
+    FUTURE: "POLYMATH",
+    "✨": "🧩",
+    "अंगज": "ANDYPRO720",
+    "KEY": "ENGINEERING-MINDSET",
+    J: "JTAG/JS",
+    A: "ASSEMBLY",
+    G: "GIT",
+    N: "NEOVIM",
+    "A.": "ALU",
+    inception: "HTML",
+    motto: "I DO NOT UNDERSTAND, WHAT I CANNOT CREATE",
+    "#####": "#DRIVER-SET#",
+    "404": "110010100",
+    presence: "16BIT-PC",
+    OS: "JACK",
+    "core.": "<CODE>",
+    "reason?": "CREATION.",
+    愛: "معشوق"
+  },
+
+  // --- 3. HOME HOVER ---
+  home: {
+    "WELCOME TO": "WELCOME TO",
+    "ANGAJ.ORG": "ANGAJ.ORG/HOME",
+    INSPIRE: "SAM MANEKSHAW",
+    FUTURE: "ED REFORMISM",
+    "✨": "🧿",
+    "अंगज": "JAGNA",
+    "KEY": "QUESTION-EVERYTHING",
+    J: "JAMMU शैल",
+    A: "AFPI",
+    G: "GYM",
+    N: "NOLAN",
+    "A.": "AN AFTERNOON",
+    inception: "REESI-ROSS",
+    motto: "I SOLEMNLY SWEAR THAT I AM UP TO SOME GOOD",
+    "#####": "#234A#",
+    "404": "NOT FOUND",
+    presence: "PROF.",
+    OS: "NOTION",
+    "core.": ">MUSIC<",
+    "reason?": "EXPERIENCES.",
+    愛: "जननी"
+  } 
+      
+};
 
     backgroundTextItems.forEach((item) => {
       item.dataset.originalText = item.textContent;
@@ -780,7 +740,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function initializeParallax() {
       const container = document.querySelector("body");
       const backgroundElements = [
-        ...document.querySelectorAll("[id$='-bg']"),
+       // ...document.querySelectorAll("[id$='-bg']"), //remove this effect
         ...document.querySelectorAll(".bg-text-container") 
       ];
 
@@ -869,7 +829,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ease: "none"
       });
 
-      const delay = 0.5 + Math.random() * 2;
+      const delay = 2.5 + Math.random() * 2; //scramble delay
       setTimeout(scrambleRandomText, delay * 1000);
     }
 
@@ -1046,7 +1006,12 @@ document.addEventListener("DOMContentLoaded", function () {
           } else {
             // --- FIRST TAP: Activate ---
             e.preventDefault(); //prevent first tap from navigating
-            promptElement.textContent = "Tap again to enter.";
+            if (rowId === 'server') {
+              promptElement.textContent = "Restricted Access. Tap to enter"
+            }
+            else {
+              promptElement.textContent = "Tap again to enter.";
+            }
             const activeRow = document.querySelector(".text-row.active");
             if (activeRow) {
               transitionBetweenRows(activeRow, row);
@@ -1061,7 +1026,12 @@ document.addEventListener("DOMContentLoaded", function () {
         if (interactiveArea) { // Add null check for safety
           interactiveArea.addEventListener("mouseenter", () => {
             activateRow(row);
-            promptElement.textContent = "Click to enter domain!";
+            if (rowId === 'server') {
+              promptElement.textContent = "Restricted Access. Click to enter"
+            }
+            else {
+              promptElement.textContent = "Tap again to enter.";
+            }
           });
           interactiveArea.addEventListener("mouseleave", () => {
             if (state.activeRowId === row.dataset.rowId) {
