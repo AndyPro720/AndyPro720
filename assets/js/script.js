@@ -1046,6 +1046,7 @@ document.addEventListener("DOMContentLoaded", function () {
           } else {
             // --- FIRST TAP: Activate ---
             e.preventDefault(); //prevent first tap from navigating
+            promptElement.textContent = "Tap again to enter.";
             const activeRow = document.querySelector(".text-row.active");
             if (activeRow) {
               transitionBetweenRows(activeRow, row);
@@ -1060,10 +1061,12 @@ document.addEventListener("DOMContentLoaded", function () {
         if (interactiveArea) { // Add null check for safety
           interactiveArea.addEventListener("mouseenter", () => {
             activateRow(row);
+            promptElement.textContent = "Click to enter domain!";
           });
           interactiveArea.addEventListener("mouseleave", () => {
             if (state.activeRowId === row.dataset.rowId) {
               deactivateRow(row);
+              resetPrompt(); // reset prompt on mouse leave
             }
           });
         }
@@ -1086,7 +1089,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const activeRow = document.querySelector(".text-row.active");
         if (activeRow) {
           deactivateRow(activeRow);
-        }
+          resetPrompt(); // reset prompt on outside tap
+          }
       }, { passive: true }); // Added passive for performance
     }
     // --- END: NEW EVENT LISTENER BLOCK --- 
