@@ -128,9 +128,9 @@ body {
 .text-item {
   position: absolute;
   color: var(--text);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   text-transform: uppercase;
-  opacity: 1.8;
+  opacity: 1;
   white-space: nowrap;
   font-family: "TheGoodMonolith", monospace;
   z-index: 0;
@@ -374,6 +374,41 @@ body {
 
   .text-item {
     font-size: 0.6rem;
+  }
+  
+  .text-item[data-text="| J"] {
+    left: 5% !important; /* Starts at the edge */
+  }
+  .text-item[data-text="A"] {
+    left: 20% !important; /* Spaced out */
+  }
+  .text-item[data-text="G"] {
+    left: 35% !important; /* Spaced out */
+  }
+  .text-item[data-text="N"] {
+    left: 50% !important; /* Spaced out */
+  }
+  .text-item[data-text="A |"] {
+    left: 65% !important; /* Spaced out */
+  }
+  .text-item[data-text="WELCOME TO"] {
+    left: 3% !important; /* Starts at the edge */
+  }
+  .text-item[data-text="ANGAJ.ORG"] {
+    left: 17% !important; /* Spaced out */
+  }
+  .text-item[data-text="INSPIRE"] {
+    left: 38% !important; /* Spaced out */
+  }
+  .text-item[data-text="motto"] {
+    top: 47.5% !important; /* Spaced out */
+  }
+  .text-item[data-text="hollup"] {
+    left: 13.5% !important; /* Spaced out */
+  }
+  .text-item[data-text="KEY"] {
+    top: 13% !important; /* Spaced out */
+    left: 47% !important;
   }
   
 }
